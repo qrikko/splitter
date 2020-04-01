@@ -1,0 +1,1 @@
+ sudo ln -s /etc/ssl/ca-bundle.pem /etc/ssl/certs/ca-certificates.crt
