@@ -1,0 +1,2 @@
+# splitter
+Speedrun split tool
