@@ -5,6 +5,7 @@ using UnityEngine;
 public class SumOfBest : MonoBehaviour
 {
     [SerializeField] private TMP_Text _sob;
+    [SerializeField] private TMP_Text _attempts;
 
     private speedrun.RunModel _model;
     void OnEnable () {
@@ -12,6 +13,11 @@ public class SumOfBest : MonoBehaviour
         //SplitsManager
         //SplitsManager.on_reset += update_gold;
         SplitsManager.on_run_end += update_gold;
+        SplitsManager.on_attempts_update += update_attempts;
+    }
+
+    private void update_attempts(int num, int finished) {
+        _attempts.text = "[" + num + "/" + finished + "]";
     }
 
     private void update_gold() {

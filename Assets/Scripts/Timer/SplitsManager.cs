@@ -36,6 +36,9 @@ public class SplitsManager : MonoBehaviour {
     public delegate void run_end_delegate();
     public static run_end_delegate on_run_end;
 
+    public delegate void update_attempts_delegate(int num, int finished);
+    public static update_attempts_delegate on_attempts_update;
+
     public delegate void reset_delegate(string split_name);
     public static reset_delegate on_reset;
 
@@ -50,6 +53,16 @@ public class SplitsManager : MonoBehaviour {
         //run_event(RunEvents.start);
         speedrun.RunAttempt new_attempt = new speedrun.RunAttempt();
         new_attempt.attempt_index = _model.run.game_meta.attempts_count;
+
+        int attempt_count = 0;
+        foreach(var a in _model.run.attempts) {
+            if (a.finished == true) {
+                attempt_count ++;
+            }
+        }
+
+        on_attempts_update(new_attempt.attempt_index, attempt_count);
+
         DateTime now = DateTime.Now;
         new_attempt.start_datetime = now.ToString("yyyyMMddTHH:mm.ss");
 
