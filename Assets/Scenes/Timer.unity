@@ -1473,7 +1473,6 @@ GameObject:
   m_Component:
   - component: {fileID: 517313622}
   - component: {fileID: 517313623}
-  - component: {fileID: 517313624}
   m_Layer: 5
   m_Name: Run Progress
   m_TagString: Untagged
@@ -1553,25 +1552,6 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
---- !u!95 &517313624
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 517313621}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: c4aad17cbcd039c74a2a1239672bf346, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &546177882
 GameObject:
   m_ObjectHideFlags: 0
@@ -2423,7 +2403,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _pb_comparison: {fileID: 1550400657}
   _glod_comparison: {fileID: 1649042119}
-  _thumb: {fileID: 1530035521}
   _run_progress: {fileID: 517313623}
   _final_split: {fileID: 1711929432}
   _split_name: {fileID: 479558917}
@@ -3801,6 +3780,7 @@ GameObject:
   - component: {fileID: 1530035520}
   - component: {fileID: 1530035522}
   - component: {fileID: 1530035521}
+  - component: {fileID: 1530035523}
   m_Layer: 5
   m_Name: thumb
   m_TagString: Untagged
@@ -3863,6 +3843,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1530035519}
   m_CullTransparentMesh: 0
+--- !u!114 &1530035523
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1530035519}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad1137f5b539a33c6b010b718d3e5b23, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1550400655
 GameObject:
   m_ObjectHideFlags: 0

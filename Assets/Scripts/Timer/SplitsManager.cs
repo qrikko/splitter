@@ -9,6 +9,7 @@ public enum RunEvents {
     end
 };
 public class SplitsManager : MonoBehaviour {
+    //@todo: look into if these should be moved to their own scripts, making use of the event system instead, not sure..
     [SerializeField] private SplitRow _split_prefab = null;
     [SerializeField] private Image _pb_compare      = null;
     [SerializeField] private Timer _timer           = null;
@@ -24,8 +25,7 @@ public class SplitsManager : MonoBehaviour {
     private speedrun.Split _previous_split = null;
     private SplitRow _current_split_row;
 
-    
-
+    // @todo: go through and clean up the delegates, I am sure there are some that doesn't make sense.
     public delegate void run_event_delegate(RunEvents run_event);
     public static run_event_delegate run_event;
 
@@ -48,6 +48,11 @@ public class SplitsManager : MonoBehaviour {
     public delegate void gold_comparison_delegate(long time, Color c);
     public static gold_comparison_delegate on_split_compare;
 
+// Refactored and known GOOD delegates:
+    public delegate void update_split_thumb_delegate(Image img);
+    public static update_split_thumb_delegate on_update_split_thumb;
+
+    // @todo: does this really need to be it's own function, isn't this just teh same as split?
     public void start_run()
     {
         if (_animator != null) {
@@ -86,8 +91,10 @@ public class SplitsManager : MonoBehaviour {
             _current_split_row.model.pb,
             _current_split_row.thumb
         );
+        on_update_split_thumb(_current_split_row.thumb);
     }
 
+    // @todo: do we need one reset and one restart?
     private void reset()
     {
         //run_event(RunEvents.reset);
@@ -252,6 +259,8 @@ public class SplitsManager : MonoBehaviour {
             _current_split_row.model.pb,
             _current_split_row.thumb
         );
+
+        on_update_split_thumb(_current_split_row.thumb);
     }
 
     private void Update()

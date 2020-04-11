@@ -8,7 +8,6 @@ using System.Diagnostics;
 public class RunSummary : MonoBehaviour {
     [SerializeField] private Image _pb_comparison = null;
     [SerializeField] private Image _glod_comparison = null;
-    [SerializeField] private Image _thumb = null;
     [SerializeField] private Slider _run_progress = null;
     [SerializeField] private Image _final_split = null;
     [SerializeField] private TMP_Text _split_name = null;
@@ -33,7 +32,6 @@ public class RunSummary : MonoBehaviour {
     private void run_start (long run_pb, Image last_split_thumb)
     {
         _run_pb = run_pb;
-        _final_split.sprite = last_split_thumb.sprite;
         _final_split.preserveAspect = true;
     }
 
@@ -43,8 +41,6 @@ public class RunSummary : MonoBehaviour {
         _last_split_time = split_time;
         _gold_time = gold_time;
         _pb_time = pb_time;
-        _thumb.sprite = thumb.sprite;
-        _thumb.preserveAspect = true;
     }
 
     private void run_end() { }
