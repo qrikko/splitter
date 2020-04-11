@@ -2,14 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-// idea is that this one kind of keeps track of the split rows, and uses delagates to just notify what is going on.
-public enum RunEvents {
-    start,
-    reset,
-    end
-};
 public class SplitsManager : MonoBehaviour {
-    //@todo: look into if these should be moved to their own scripts, making use of the event system instead, not sure..
     [SerializeField] private SplitRow _split_prefab = null;
     [SerializeField] private Image _pb_compare      = null;
     [SerializeField] private Timer _timer           = null;
@@ -25,57 +18,48 @@ public class SplitsManager : MonoBehaviour {
     private speedrun.Split _previous_split = null;
     private SplitRow _current_split_row;
 
-    // @todo: go through and clean up the delegates, I am sure there are some that doesn't make sense.
-    public delegate void run_event_delegate(RunEvents run_event);
-    public static run_event_delegate run_event;
-
     public delegate void run_start_delegate(long run_pb, Image thumb);
     public static run_start_delegate on_run_start;
+
     public delegate void run_end_delegate();
     public static run_end_delegate on_run_end;
 
     public delegate void update_attempts_delegate(int num, int finished);
     public static update_attempts_delegate on_attempts_update;
 
-    //@todo: make a clean reset delegate which takes no parameters and have one to reset name of the split, so we can use reset
-    // even when we dont have a name
     public delegate void reset_delegate(string split_name);
     public static reset_delegate on_reset;
 
-    public delegate void split_delegate(string split, long split_time, long gold_time, long pb_time, Image thumb);
+    public delegate void split_delegate(string split, long split_time, long gold_time, long pb_time);
     public static split_delegate on_split;
 
     public delegate void gold_comparison_delegate(long time, Color c);
     public static gold_comparison_delegate on_split_compare;
 
-// Refactored and known GOOD delegates:
     public delegate void update_split_thumb_delegate(Image img);
     public static update_split_thumb_delegate on_update_split_thumb;
 
-    // @todo: does this really need to be it's own function, isn't this just teh same as split?
-    public void start_run()
-    {
+
+    private void save() {
+        string path = PlayerPrefs.GetString(_id);
+        if (path == null || path == "") {
+            path = Application.persistentDataPath + "/" + _id + "/splits/split.json";
+        }
+        _model.save(path);
+    }
+
+    public void start_run() {
         if (_animator != null) {
             _animator.SetTrigger("start");
         }
-        //run_event(RunEvents.start);
+
         speedrun.RunAttempt new_attempt = new speedrun.RunAttempt();
         new_attempt.attempt_index = _model.run.game_meta.attempts_count;
-
-        int attempt_count = 0;
-        foreach(var a in _model.run.attempts) {
-            if (a.finished == true) {
-                attempt_count ++;
-            }
-        }
-
-        on_attempts_update(new_attempt.attempt_index, attempt_count);
 
         DateTime now = DateTime.Now;
         new_attempt.start_datetime = now.ToString("yyyyMMddTHH:mm.ss");
 
         GetComponentsInChildren<SplitRow>()[_split_index].split_in();
-//        GetComponentsInChildren<SplitRow>()[_split_index].GetComponent<Image>().color = Color.blue;
         _current_split_row = GetComponentsInChildren<SplitRow>()[0];
         _current_attempt = new_attempt;
         _model.run.game_meta.attempts_count++;
@@ -88,32 +72,26 @@ public class SplitsManager : MonoBehaviour {
             _current_split_row.model.name, 
             0, 
             _current_split_row.model.gold, 
-            _current_split_row.model.pb,
-            _current_split_row.thumb
+            _current_split_row.model.pb
         );
         on_update_split_thumb(_current_split_row.thumb);
     }
 
-    // @todo: do we need one reset and one restart?
-    private void reset()
-    {
-        //run_event(RunEvents.reset);
+    private void reset() {
         SplitRow[] rows = GetComponentsInChildren<SplitRow>();
-        for(int i=0; i<rows.Length; i++)
-        {
+        for(int i=0; i<rows.Length; i++) {
             SplitRow s = rows[i];
             s.model = _model.run.split_meta[i];
             s.reset();
         }
         _split_index = 0;
-        
+
         _timer.reset();
         on_reset(rows[0].model.name);
         on_run_end();
     }
 
-    private void restart_run()
-    {
+    private void restart_run() {
         if (_animator != null) {
             _animator.SetTrigger("stop");
         }
@@ -123,15 +101,9 @@ public class SplitsManager : MonoBehaviour {
 
         _pb_compare.fillAmount = 0;
 
-        // write the attempt to file, update golds and pb times
-        // also.. perhaps write to file more often, but for now this is where I'll do it.
-        string path = PlayerPrefs.GetString(_id);
-        if (path == null || path == "") {
-            path = Application.persistentDataPath + "/" + _id + "/splits/split.json";
-        }
-        
-        _model.save(path);
+        on_attempts_update(_model.run.game_meta.attempts_count, _model.run.game_meta.finished_count);
 
+        save();
         reset();
     }
 
@@ -139,23 +111,17 @@ public class SplitsManager : MonoBehaviour {
         if (_animator != null) {
             _animator.SetTrigger("stop");
         }
-        //run_event(RunEvents.end);
+
         long pb = _model.run.split_meta[_split_index-1].pb;
         _timer.end_run(pb);
 
-        if (_timer.stopwatch.ElapsedMilliseconds < pb || pb==0)
-        {
-            
-            foreach (speedrun.SplitMeta sm in _model.run.split_meta)
-            {
+        if (_timer.stopwatch.ElapsedMilliseconds < pb || pb==0) {
+            foreach (speedrun.SplitMeta sm in _model.run.split_meta) {
                 sm.pb = sm.history[sm.history.Count - 1].split_time;
                 sm.pb_index = _current_attempt.attempt_index;
             }
             _model.run.game_meta.pb_attempt_index = _current_attempt.attempt_index;
         }
-        
-        // this shouldn't be done here, should be done in RunSummary, use delegate!
-       // _pb_compare.fillAmount = 0;
 
         _split_index = 0;
 
@@ -163,14 +129,10 @@ public class SplitsManager : MonoBehaviour {
         _current_attempt.finished = true;
         _model.run.attempts.Add(_current_attempt);
 
+        _model.run.game_meta.finished_count++;
+        on_attempts_update(_model.run.game_meta.attempts_count, _model.run.game_meta.finished_count);
 
-        // write the attempt to file, update golds and pb times
-        // also.. perhaps write to file more often, but for now this is where I'll do it.
-        string path = PlayerPrefs.GetString(_id);
-        if (path == null || path == "") {
-            path = Application.persistentDataPath + "/" + _id + "/splits/split.json";
-        }
-        _model.save(path);
+        save();
         on_run_end();
     }
 
@@ -183,6 +145,7 @@ public class SplitsManager : MonoBehaviour {
         _current_split_row.split_out();
         return split;
     }
+
     public void skip_split() {
         speedrun.Split split = create_split(-1);
         _current_split_row.delta.text = "-";
@@ -196,23 +159,11 @@ public class SplitsManager : MonoBehaviour {
                 _current_split_row.model.name,
                 _previous_split.split_time,
                 _current_split_row.model.gold,
-                _current_split_row.model.pb,
-                _current_split_row.thumb
+                _current_split_row.model.pb
         );
     }
 
-    public void split ()
-    {
-        /*
-        speedrun.Split split = new speedrun.Split();
-        split.attempt_index = _current_attempt.attempt_index;
-        split.split_time = _timer.stopwatch.ElapsedMilliseconds;
-        //split.split_duration = split.split_time - _last_split.split_time;
-        
-        _model.run.split_meta[_split_index].history.Add(split);
-        //_last_split = split;
-        _current_split_row.split_out();*/
-
+    public void split () {
         speedrun.Split split = create_split(_timer.stopwatch.ElapsedMilliseconds);
         TimeSpan elapsed = _timer.stopwatch.Elapsed; // total milliseconds for precission?
         _current_split_row.time.text = elapsed.ToString(@"m\:ss");
@@ -224,12 +175,8 @@ public class SplitsManager : MonoBehaviour {
         _current_split_row.delta.text = (pb_time_left > 0 ? "-" : "+") + ts.ToString(ts_string);
 
         long split_gold = _model.run.split_meta[_split_index].gold;
-        long split_duration = split.split_time;
-       // if (_split_index > 0)
-       // {
-            split.split_duration = split.split_time - (_previous_split == null ? 0 : _previous_split.split_time);
-       // }
-        
+        split.split_duration = split.split_time - (_previous_split == null ? 0 : _previous_split.split_time);
+
         if (split.split_duration < split_gold || split_gold==0) {
             long old_gold = _model.run.split_meta[_split_index].gold;
             _model.run.split_meta[_split_index].gold = split.split_duration;
@@ -241,13 +188,10 @@ public class SplitsManager : MonoBehaviour {
             on_split_compare(time_left, time_left > 0 ? Color.green:Color.red);
         }
 
-        if (++_split_index >= _model.run.split_meta.Count)
-        {
+        if (++_split_index >= _model.run.split_meta.Count) {
             end_run();
-        } else
-        {
+        } else {
             GetComponentsInChildren<SplitRow>()[_split_index].split_in();
-            //GetComponentsInChildren<SplitRow>()[_split_index].GetComponent<Image>().color = Color.blue;
         }
         _previous_split = split;
         _current_split_row = GetComponentsInChildren<SplitRow>()[_split_index];
@@ -256,26 +200,24 @@ public class SplitsManager : MonoBehaviour {
             _current_split_row.model.name, 
             _previous_split.split_time, 
             _current_split_row.model.gold, 
-            _current_split_row.model.pb,
-            _current_split_row.thumb
+            _current_split_row.model.pb
         );
 
         on_update_split_thumb(_current_split_row.thumb);
     }
 
-    private void Update()
-    {
+    //@todo: there must be things we don't need to do directly here!
+    private void Update() {
         if (_current_split_row != null && _timer.stopwatch.IsRunning) {
+            float run_percent = (float)_timer.stopwatch.ElapsedMilliseconds / _model.run.split_meta[_model.run.split_meta.Count-1].pb;
+
             long split_time = _previous_split==null ? 0 : _previous_split.split_time;
             long gold = _current_split_row.model.gold;            
             long ms = _timer.stopwatch.ElapsedMilliseconds - split_time;
 
-            //long pb_time_left = _pb_time - _timer.stopwatch.ElapsedMilliseconds;
-
             if (ms < gold) {
                 _current_split_row.delta_image.fillAmount = (float)ms/gold;
             } else if (_timer.stopwatch.ElapsedMilliseconds < _current_split_row.model.pb){
-                //_current_split_row.delta_image.fillAmount = 1;
                 _current_split_row.delta_image.color = Color.green;
             } else {
                 _current_split_row.delta_image.color = Color.red;
@@ -300,23 +242,18 @@ public class SplitsManager : MonoBehaviour {
                 _current_split_row.delta.color = Color.red;
                 _current_split_row.delta.text = "+" + ts.ToString(ts_string);
             }
-            // slider, should be moved to it's own script for split summary!
+
             _run_total.value = (float)_timer.stopwatch.ElapsedMilliseconds / _model.run.split_meta[_model.run.split_meta.Count-1].pb;
         }
 
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            if (_timer.stopwatch.IsRunning == false)
-            {
-                if (_timer.stopwatch.ElapsedMilliseconds > 0)
-                {
+        if (Input.GetKeyDown(KeyCode.Space)) {
+            if (_timer.stopwatch.IsRunning == false) {
+                if (_timer.stopwatch.ElapsedMilliseconds > 0) {
                     reset();
-                } else
-                {
+                } else {
                     start_run();
                 }
-            } else
-            { 
+            } else {
                 split();
             }
         } else if(Input.GetKeyDown(KeyCode.S)) {
@@ -326,9 +263,7 @@ public class SplitsManager : MonoBehaviour {
         }
     }
 
-    void Start()
-    {
-        //run_event(RunEvents.reset);
+    void Start() {
         _id = PlayerPrefs.GetString("active_game");
         _model = GameView.load_game_model(_id);
         var start_offset = _model.run.game_meta.start_offset;
@@ -337,12 +272,21 @@ public class SplitsManager : MonoBehaviour {
         } else {
             _timer.offset = 0.0f;
         }
-        //_timer.reset();
 
         foreach (speedrun.SplitMeta s in _model.run.split_meta) {
             SplitRow split = SplitRow.Instantiate(_split_prefab, transform);
             split.model = s;
-
         }
+
+        if (_model.run.game_meta.finished_count == 0 || _model.run.game_meta.finished_count == null) {
+            _model.run.game_meta.finished_count = 0;
+            foreach(var a in _model.run.attempts) {
+                if (a.finished == true) {
+                    _model.run.game_meta.finished_count++;
+                }
+            }
+            save();
+        }
+        on_attempts_update(_model.run.game_meta.attempts_count, _model.run.game_meta.finished_count);
     }
 }

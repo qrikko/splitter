@@ -28,6 +28,7 @@ namespace speedrun
         public string catergory;
         public string start_offset;
         public int attempts_count;
+        public int finished_count;
         public int pb_attempt_index;
     }
 

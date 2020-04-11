@@ -35,7 +35,7 @@ public class RunSummary : MonoBehaviour {
         _final_split.preserveAspect = true;
     }
 
-    private void split(string name, long split_time, long gold_time, long pb_time, Image thumb)
+    private void split(string name, long split_time, long gold_time, long pb_time)
     {
         _split_name.text = name;
         _last_split_time = split_time;
