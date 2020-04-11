@@ -74,14 +74,12 @@ public class RunSummary : MonoBehaviour {
 
             long pb_time_left = _pb_time - _timer.stopwatch.ElapsedMilliseconds;
             System.TimeSpan ts = System.TimeSpan.FromMilliseconds(pb_time_left);
-            string ts_string = ts.Minutes == 0 ? @"ss\.f" : @"mm\:ss";
+            string ts_string = ts.Minutes == 0 ? @"s\.f" : @"mm\:ss";
 
-            if (pb_time_left > 0)
-            {
+            if (pb_time_left > 0) {
                 _split_delta.color = Color.green;
                 _split_delta.text = "-" + ts.ToString(ts_string);
-            } else
-            {
+            } else {
                 _split_delta.color = Color.red;
                 _split_delta.text = "+" + ts.ToString(ts_string);
             }

@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 
 public class ContextMenu : MonoBehaviour, IPointerClickHandler
 {
-    [SerializeField] private GameObject _context_menu;
+    [SerializeField] private GameObject _context_menu = null;
     
     void OnEnable() {
         _context_menu.SetActive(false);

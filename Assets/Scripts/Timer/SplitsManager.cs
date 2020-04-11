@@ -1,8 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
 using UnityEngine.UI;
-using System;
 
 // idea is that this one kind of keeps track of the split rows, and uses delagates to just notify what is going on.
 public enum RunEvents {
@@ -12,10 +10,10 @@ public enum RunEvents {
 };
 public class SplitsManager : MonoBehaviour {
     [SerializeField] private SplitRow _split_prefab = null;
-    [SerializeField] private Image _pb_compare;
-    [SerializeField] private Timer _timer = null;
-    [SerializeField] private Slider _run_total = null;
-    [SerializeField] private Animator _animator;
+    [SerializeField] private Image _pb_compare      = null;
+    [SerializeField] private Timer _timer           = null;
+    [SerializeField] private Slider _run_total      = null;
+    [SerializeField] private Animator _animator     = null;
 
     private speedrun.RunAttempt _current_attempt = null;
 
@@ -39,12 +37,17 @@ public class SplitsManager : MonoBehaviour {
     public delegate void update_attempts_delegate(int num, int finished);
     public static update_attempts_delegate on_attempts_update;
 
+    //@todo: make a clean reset delegate which takes no parameters and have one to reset name of the split, so we can use reset
+    // even when we dont have a name
     public delegate void reset_delegate(string split_name);
     public static reset_delegate on_reset;
 
     public delegate void split_delegate(string split, long split_time, long gold_time, long pb_time, Image thumb);
     public static split_delegate on_split;
-    
+
+    public delegate void gold_comparison_delegate(long time, Color c);
+    public static gold_comparison_delegate on_split_compare;
+
     public void start_run()
     {
         if (_animator != null) {
@@ -99,6 +102,7 @@ public class SplitsManager : MonoBehaviour {
         
         _timer.reset();
         on_reset(rows[0].model.name);
+        on_run_end();
     }
 
     private void restart_run()
@@ -219,10 +223,15 @@ public class SplitsManager : MonoBehaviour {
             split.split_duration = split.split_time - (_previous_split == null ? 0 : _previous_split.split_time);
        // }
         
-        if (split.split_duration < split_gold || split_gold==0)
-        {
+        if (split.split_duration < split_gold || split_gold==0) {
+            long old_gold = _model.run.split_meta[_split_index].gold;
             _model.run.split_meta[_split_index].gold = split.split_duration;
             _current_split_row.GetComponent<Image>().color = new Color(1.0f, 0.92f, 0.0f, 0.25f);
+            on_split_compare(split.split_duration - old_gold, new Color(1.0f, 0.92f, 0.0f, 0.9f));
+        } else {
+            long diff = split.split_duration - _model.run.split_meta[_split_index].gold;
+            long time_left = _current_split_row.model.pb - _timer.stopwatch.ElapsedMilliseconds;
+            on_split_compare(time_left, time_left > 0 ? Color.green:Color.red);
         }
 
         if (++_split_index >= _model.run.split_meta.Count)
@@ -321,9 +330,7 @@ public class SplitsManager : MonoBehaviour {
         }
         //_timer.reset();
 
-        foreach (speedrun.SplitMeta s in _model.run.split_meta)
-        {
-            Debug.Log(s.name);
+        foreach (speedrun.SplitMeta s in _model.run.split_meta) {
             SplitRow split = SplitRow.Instantiate(_split_prefab, transform);
             split.model = s;
 

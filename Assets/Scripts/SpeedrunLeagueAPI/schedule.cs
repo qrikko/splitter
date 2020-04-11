@@ -6,8 +6,7 @@ using UnityEngine;
 
 namespace SpeedrunningLeagueAPI {
     public class schedule : MonoBehaviour {
-        [SerializeField] SL_DateRow _date_row_prefab;
-        [SerializeField] SL_MatchRow _match_row_prefab;
+        [SerializeField] private SL_MatchRow _match_row_prefab  = null;
         private MatchesModel _model;
         public MatchesModel model {
             set {

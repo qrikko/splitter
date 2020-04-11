@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class SL_MatchRow : MonoBehaviour
 {
-    [SerializeField] private TMP_Text _day;
-    [SerializeField] private TMP_Text _date;
-    [SerializeField] private TMP_Text _month;
-    [SerializeField] private TMP_Text _time;
-    [SerializeField] private TMP_Text _game_title;
-    [SerializeField] private TMP_Text _vs_runner_name;
+    [SerializeField] private TMP_Text _day              = null;
+    [SerializeField] private TMP_Text _date             = null;
+    [SerializeField] private TMP_Text _month            = null;
+    [SerializeField] private TMP_Text _time             = null;
+    [SerializeField] private TMP_Text _game_title       = null;
+    [SerializeField] private TMP_Text _vs_runner_name   = null;
 
-    [SerializeField] private UnityEngine.UI.Image _game_image;
-    [SerializeField] private UnityEngine.UI.Image _vs_runner_image;
+    [SerializeField] private UnityEngine.UI.Image _game_image       = null;
+    [SerializeField] private UnityEngine.UI.Image _vs_runner_image  = null;
 
     private SpeedrunningLeagueAPI.MatchModel _model;
     public SpeedrunningLeagueAPI.MatchModel model {

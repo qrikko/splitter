@@ -12,18 +12,18 @@ using UnityEngine.UI;
 using TMPro;
 
 public class SpeedrunAPIGameSplitController : MonoBehaviour {
-    [SerializeField] private Split _split_row_prefab = null;
-    [SerializeField] private GameObject _split_container = null;
+    [SerializeField] private Split _split_row_prefab        = null;
+    [SerializeField] private GameObject _split_container    = null;
 
     [SerializeField] private TMP_InputField _split_name = null;
     [SerializeField] private TMP_Dropdown _saved_splits = null;
-    [SerializeField] private TMP_InputField _name = null;
-    [SerializeField] private TMP_Dropdown _category = null;
+    [SerializeField] private TMP_InputField _name       = null;
+    [SerializeField] private TMP_Dropdown _category     = null;
     [SerializeField] private TMP_InputField _start_time = null;
-    [SerializeField] private TMP_InputField _attempts = null;
-    [SerializeField] private Image _thumb = null;
+    [SerializeField] private TMP_InputField _attempts   = null;
+    [SerializeField] private Image _thumb               = null;
 
-    [SerializeField] private GameObject _name_select;
+    [SerializeField] private GameObject _name_select = null;
 
     private speedrun.RunModel _split_model;
     private speedrun.Categories _categories;

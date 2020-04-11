@@ -12,7 +12,6 @@ public class Split : MonoBehaviour
     [SerializeField] private Image _thumb = null;
     [SerializeField] private TMP_InputField _name = null;
     [SerializeField] private TMP_InputField _split_time = null;
-    [SerializeField] private TMP_InputField _segment_time = null;
     [SerializeField] private TMP_InputField _best_segment = null;
     [SerializeField] private FileBrowser _imagepicker = null;
 

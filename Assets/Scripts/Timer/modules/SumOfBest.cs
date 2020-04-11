@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class SumOfBest : MonoBehaviour
 {
-    [SerializeField] private TMP_Text _sob;
-    [SerializeField] private TMP_Text _attempts;
+    [SerializeField] private TMP_Text _sob      = null;
+    [SerializeField] private TMP_Text _attempts = null;
 
     private speedrun.RunModel _model;
     void OnEnable () {

@@ -15,7 +15,7 @@ public class SplitRow : MonoBehaviour
     [SerializeField] private Image _bg_fill = null;
 
     private Color _empty_color;
-    [SerializeField] private Color _filled_color;
+    [SerializeField] private Color _filled_color = Color.white;
 
     public void progress(float fill) {
         _bg_fill.fillAmount = fill;

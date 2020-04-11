@@ -6,7 +6,7 @@ using TMPro;
 
 public class SelectNameForSplit : MonoBehaviour
 {
-    [SerializeField] TMP_InputField _filename;
+    [SerializeField] TMP_InputField _filename = null;
     public void done() {
         string id = PlayerPrefs.GetString("active_game");
         string path = Application.persistentDataPath + "/" + id + "/splits/" + _filename.text + ".json";

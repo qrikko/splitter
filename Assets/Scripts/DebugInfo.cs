@@ -17,7 +17,8 @@ public class DebugInfo : MonoBehaviour
     }
 
     private void print_debug() {
-        Debug.Log("active game: " + PlayerPrefs.GetString("userid"));
+        Debug.Log("active game: " + PlayerPrefs.GetString("active_game"));
+
     }
 
     // Update is called once per frame
