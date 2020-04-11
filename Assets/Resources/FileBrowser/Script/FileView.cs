@@ -59,7 +59,9 @@ public class FileView : MonoBehaviour
 
     // Start is called before the first frame update
     void Start() {
-        string path = Application.persistentDataPath;
+        string path = PlayerPrefs.GetString("browser_path") == ""
+            ? Application.persistentDataPath
+            : Path.GetDirectoryName(PlayerPrefs.GetString("browser_path"));
         //string path = "/home/qrikko/Documents/Unity Projects/Splitter/Assets/Graphics/";
         list_folder(path);
     }

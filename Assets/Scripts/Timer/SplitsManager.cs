@@ -278,7 +278,7 @@ public class SplitsManager : MonoBehaviour {
             split.model = s;
         }
 
-        if (_model.run.game_meta.finished_count == 0 || _model.run.game_meta.finished_count == null) {
+        if (_model.run.game_meta.finished_count == 0) {
             _model.run.game_meta.finished_count = 0;
             foreach(var a in _model.run.attempts) {
                 if (a.finished == true) {

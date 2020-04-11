@@ -19,6 +19,7 @@ public class FileBrowser : MonoBehaviour
     }
     
     public void selected_image(string path) {
+        PlayerPrefs.SetString("browser_path", path);
         _split.thumb_selected(path);
         Destroy (transform.gameObject.GetComponentInParent<Canvas>().gameObject);
 
