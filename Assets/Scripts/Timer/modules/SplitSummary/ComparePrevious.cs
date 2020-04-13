@@ -1,8 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
+﻿using System;
 using TMPro;
+using UnityEngine;
 
 public class ComparePrevious : MonoBehaviour {
     [SerializeField] TMP_Text _comparison = null;
@@ -17,9 +15,15 @@ public class ComparePrevious : MonoBehaviour {
         _comparison.text = "-";
     }
 
-    private void last_split_compare(long time, Color c) {
+    private void last_split_compare(TimeSpan ts, Color c) {
+        string ts_string = ts.Minutes == 0 ? @"s\.ff" : @"mm\:ss";
+        _comparison.text = ts.ToString(ts_string);
+        _comparison.color = c;
+    }
+
+    private void alast_split_compare(long time, Color c) {
         System.TimeSpan ts = System.TimeSpan.FromMilliseconds(time);
-        string ts_string = ts.Minutes == 0 ? @"s\.f" : @"mm\:ss";
+        string ts_string = ts.Minutes == 0 ? @"s\.ff" : @"mm\:ss";
 
         _comparison.color = c;
         _comparison.text = ts.ToString(ts_string);

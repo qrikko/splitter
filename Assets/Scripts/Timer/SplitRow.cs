@@ -4,8 +4,11 @@ using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 
-public class SplitRow : MonoBehaviour
-{
+public class SplitRow : MonoBehaviour {
+
+    public delegate void thumb_updated_delegate(Image thumb);
+    public thumb_updated_delegate thumb_updated;
+
     [SerializeField] private Sprite _background = null;
     [SerializeField] private Image _thumb = null;
     [SerializeField] private Image _delta_image = null;
@@ -88,6 +91,10 @@ public class SplitRow : MonoBehaviour
             Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(.5f, .5f));
             _thumb.sprite = sprite;
             _thumb.preserveAspect = true;
+
+            if(thumb_updated != null) {
+                thumb_updated(_thumb);
+            }
         }
     }
 

@@ -9,6 +9,7 @@ public class SplitsManager : MonoBehaviour {
     [SerializeField] private Slider _run_total      = null;
     [SerializeField] private Animator _animator     = null;
 
+    private System.TimeSpan _previous_diff = System.TimeSpan.Zero;
     private speedrun.RunAttempt _current_attempt = null;
 
     private speedrun.RunModel _model;
@@ -33,12 +34,17 @@ public class SplitsManager : MonoBehaviour {
     public delegate void split_delegate(string split, long split_time, long gold_time, long pb_time);
     public static split_delegate on_split;
 
-    public delegate void gold_comparison_delegate(long time, Color c);
+    public delegate void gold_comparison_delegatea(long time, Color c);
+    public static gold_comparison_delegatea on_split_comparea;
+
+    public delegate void gold_comparison_delegate(System.TimeSpan ts, Color c);
     public static gold_comparison_delegate on_split_compare;
 
     public delegate void update_split_thumb_delegate(Image img);
     public static update_split_thumb_delegate on_update_split_thumb;
 
+    public delegate void final_split_image_delegate(Image img);
+    public static final_split_image_delegate final_split_image;
 
     private void save() {
         string path = PlayerPrefs.GetString(_id);
@@ -53,6 +59,7 @@ public class SplitsManager : MonoBehaviour {
             _animator.SetTrigger("start");
         }
 
+        _previous_diff = System.TimeSpan.Zero;
         speedrun.RunAttempt new_attempt = new speedrun.RunAttempt();
         new_attempt.attempt_index = _model.run.game_meta.attempts_count;
 
@@ -66,8 +73,8 @@ public class SplitsManager : MonoBehaviour {
         _previous_split = null;
         _timer.new_run();
 
-        SplitRow last_split = GetComponentsInChildren<SplitRow>()[GetComponentsInChildren<SplitRow>().Length - 1];
-        on_run_start(last_split.model.pb, last_split.thumb);
+        //SplitRow last_split = GetComponentsInChildren<SplitRow>()[GetComponentsInChildren<SplitRow>().Length - 1];
+        //on_run_start(last_split.model.pb, last_split.thumb);
         on_split(
             _current_split_row.model.name, 
             0, 
@@ -181,12 +188,21 @@ public class SplitsManager : MonoBehaviour {
             long old_gold = _model.run.split_meta[_split_index].gold;
             _model.run.split_meta[_split_index].gold = split.split_duration;
             _current_split_row.GetComponent<Image>().color = new Color(1.0f, 0.92f, 0.0f, 0.25f);
-            on_split_compare(split.split_duration - old_gold, new Color(1.0f, 0.92f, 0.0f, 0.9f));
+
+            System.TimeSpan glod_ts = System.TimeSpan.FromMilliseconds(split.split_duration - old_gold);
+            on_split_compare(glod_ts, new Color(1.0f, 0.92f, 0.0f, 0.9f));
         } else {
-            long diff = split.split_duration - _model.run.split_meta[_split_index].gold;
-            long time_left = _current_split_row.model.pb - _timer.stopwatch.ElapsedMilliseconds;
-            on_split_compare(time_left, time_left > 0 ? Color.green:Color.red);
+            //long time_left = _current_split_row.model.pb - _timer.stopwatch.ElapsedMilliseconds;
+            //System.TimeSpan ts = System.TimeSpan.FromMilliseconds(time_left);
+            //string ts_string = ts.Minutes == 0 ? @"s\.f" : @"m\:ss";
+
+            System.TimeSpan diff_ts = (ts - _previous_diff);
+
+            //on_split_compare(time_left, time_left > 0 ? Color.green:Color.red);
+            on_split_compare(diff_ts, diff_ts.Ticks > 0 ? Color.green:Color.red);
+
         }
+        _previous_diff = ts;
 
         if (++_split_index >= _model.run.split_meta.Count) {
             end_run();
@@ -263,7 +279,21 @@ public class SplitsManager : MonoBehaviour {
         }
     }
 
-    void Start() {
+    private void set_final_split(Image img) {
+        final_split_image(img);
+    }
+
+    void OnDisable() {
+        SplitRow i = transform.GetChild(transform.childCount -1).GetComponent<SplitRow>();
+        i.thumb_updated -= set_final_split;
+    }
+
+    void OnEnable() {
+        SplitRow i = transform.GetChild(transform.childCount -1).GetComponent<SplitRow>();
+        i.thumb_updated += set_final_split;
+    }
+
+    void Awake() {
         _id = PlayerPrefs.GetString("active_game");
         _model = GameView.load_game_model(_id);
         var start_offset = _model.run.game_meta.start_offset;

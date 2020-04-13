@@ -32,6 +32,7 @@ public class RunSummary : MonoBehaviour {
     private void run_start (long run_pb, Image last_split_thumb)
     {
         _run_pb = run_pb;
+        _final_split.sprite = last_split_thumb.sprite;
         _final_split.preserveAspect = true;
     }
 
