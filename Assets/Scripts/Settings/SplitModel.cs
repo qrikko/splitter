@@ -30,6 +30,7 @@ namespace speedrun
         public int attempts_count;
         public int finished_count;
         public int pb_attempt_index;
+        public bool limerick = false;
     }
 
     [System.Serializable]
@@ -40,6 +41,7 @@ namespace speedrun
         public int pb_index = 0;
         public long gold = 0;
         public List<Split> history = new List<Split>();
+        public bool pause_state = false;
     }
 
     [System.Serializable]

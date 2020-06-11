@@ -29,6 +29,10 @@ public class SpeedrunAPIGameSplitController : MonoBehaviour {
     private speedrun.Categories _categories;
     private string _id;
 
+    public void set_limerick(bool true_or_false) {
+        _split_model.run.game_meta.limerick = true_or_false;
+    }
+
     public void back_button() {
         save();
         UnityEngine.SceneManagement.SceneManager.LoadScene("Dashboard");

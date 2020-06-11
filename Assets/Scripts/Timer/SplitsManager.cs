@@ -3,11 +3,31 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class SplitsManager : MonoBehaviour {
+    public enum ViewMode {
+        PB = 0,
+        GLOD,
+        DURATION,
+        POSSIBLE_SAVE,
+        COUNT
+    };
+    private ViewMode _view_mode = ViewMode.PB;
+
+    [SerializeField] private bool _limerick_mode = false;
+    public bool limerick_mode {
+        set {
+            _limerick_mode = value;
+            foreach(SplitRow sr in GetComponentsInChildren<SplitRow>()) {
+                sr.limerick_mode = value;
+            }
+        }
+    }
+
     [SerializeField] private SplitRow _split_prefab = null;
     [SerializeField] private Image _pb_compare      = null;
     [SerializeField] private Timer _timer           = null;
     [SerializeField] private Slider _run_total      = null;
     [SerializeField] private Animator _animator     = null;
+    [SerializeField] private SplitVerticalBar _scrollbar   = null;
 
     private System.TimeSpan _previous_diff = System.TimeSpan.Zero;
     private speedrun.RunAttempt _current_attempt = null;
@@ -19,6 +39,9 @@ public class SplitsManager : MonoBehaviour {
     private speedrun.Split _previous_split = null;
     private SplitRow _current_split_row;
 
+    public delegate void change_view_mode_delegate(ViewMode mode);
+    public static change_view_mode_delegate change_view_mode;
+
     public delegate void run_start_delegate(long run_pb, Image thumb);
     public static run_start_delegate on_run_start;
 
@@ -28,7 +51,7 @@ public class SplitsManager : MonoBehaviour {
     public delegate void update_attempts_delegate(int num, int finished);
     public static update_attempts_delegate on_attempts_update;
 
-    public delegate void reset_delegate(string split_name);
+    public delegate void reset_delegate(string split_name="");
     public static reset_delegate on_reset;
 
     public delegate void split_delegate(string split, long split_time, long gold_time, long pb_time);
@@ -73,8 +96,8 @@ public class SplitsManager : MonoBehaviour {
         _previous_split = null;
         _timer.new_run();
 
-        //SplitRow last_split = GetComponentsInChildren<SplitRow>()[GetComponentsInChildren<SplitRow>().Length - 1];
-        //on_run_start(last_split.model.pb, last_split.thumb);
+        SplitRow last_split = GetComponentsInChildren<SplitRow>()[GetComponentsInChildren<SplitRow>().Length - 1];
+        on_run_start(last_split.model.pb, last_split.thumb);
         on_split(
             _current_split_row.model.name, 
             0, 
@@ -90,6 +113,7 @@ public class SplitsManager : MonoBehaviour {
             SplitRow s = rows[i];
             s.model = _model.run.split_meta[i];
             s.reset();
+            limerick_mode = _limerick_mode;
         }
         _split_index = 0;
 
@@ -122,7 +146,7 @@ public class SplitsManager : MonoBehaviour {
         long pb = _model.run.split_meta[_split_index-1].pb;
         _timer.end_run(pb);
 
-        if (_timer.stopwatch.ElapsedMilliseconds < pb || pb==0) {
+        if (_timer.elapsed_ms < pb || pb==0) {
             foreach (speedrun.SplitMeta sm in _model.run.split_meta) {
                 sm.pb = sm.history[sm.history.Count - 1].split_time;
                 sm.pb_index = _current_attempt.attempt_index;
@@ -171,14 +195,26 @@ public class SplitsManager : MonoBehaviour {
     }
 
     public void split () {
-        speedrun.Split split = create_split(_timer.stopwatch.ElapsedMilliseconds);
-        TimeSpan elapsed = _timer.stopwatch.Elapsed; // total milliseconds for precission?
+        if (_current_split_row && _current_split_row.model.pause_state) {
+            _timer.resume();
+        }
+
+        speedrun.Split split = create_split(_timer.elapsed_ms);
+        TimeSpan elapsed = _timer.elapsed_ts; // total milliseconds for precission?
         _current_split_row.time.text = elapsed.ToString(@"m\:ss");
 
-        long pb_time_left = _current_split_row.model.pb - _timer.stopwatch.ElapsedMilliseconds;
+        long pb_time_left = _current_split_row.model.pb - _timer.elapsed_ms;
         System.TimeSpan ts = System.TimeSpan.FromMilliseconds(pb_time_left);
         _current_split_row.delta_image.color = new Color(0.0f, 0.0f, 0.0f, 0.2f);
-        string ts_string = ts.Minutes == 0 ? @"s\.f" : @"mm\:ss";
+
+        string ts_string = @"hh\:mm\:ss";
+        if (ts.Hours == 0) {
+            if (ts.Minutes == 0) {
+                ts_string = @"s\.f";
+            } else {
+                ts_string = @"mm\:ss";
+            }
+        }
         _current_split_row.delta.text = (pb_time_left > 0 ? "-" : "+") + ts.ToString(ts_string);
 
         long split_gold = _model.run.split_meta[_split_index].gold;
@@ -208,9 +244,22 @@ public class SplitsManager : MonoBehaviour {
             end_run();
         } else {
             GetComponentsInChildren<SplitRow>()[_split_index].split_in();
+
+            Debug.Log(_split_index + " " + _model.run.split_meta.Count);
+
+            float offset = (float)_split_index/_model.run.split_meta.Count;
+            if (_split_index+1 == _model.run.split_meta.Count) {
+                Debug.Log("OFFSET NOLL!");
+                offset = 1.0f;
+            }
+            _scrollbar.split(offset);
         }
         _previous_split = split;
         _current_split_row = GetComponentsInChildren<SplitRow>()[_split_index];
+
+        if (_current_split_row.model.pause_state) {
+            _timer.pause();
+        }
 
         on_split(
             _current_split_row.model.name, 
@@ -224,22 +273,22 @@ public class SplitsManager : MonoBehaviour {
 
     //@todo: there must be things we don't need to do directly here!
     private void Update() {
-        if (_current_split_row != null && _timer.stopwatch.IsRunning) {
-            float run_percent = (float)_timer.stopwatch.ElapsedMilliseconds / _model.run.split_meta[_model.run.split_meta.Count-1].pb;
+        if (_current_split_row != null && _timer.state == Timer.TimeState.Running) {
+            float run_percent = (float)_timer.elapsed_ms / _model.run.split_meta[_model.run.split_meta.Count-1].pb;
 
             long split_time = _previous_split==null ? 0 : _previous_split.split_time;
             long gold = _current_split_row.model.gold;            
-            long ms = _timer.stopwatch.ElapsedMilliseconds - split_time;
+            long ms = _timer.elapsed_ms - split_time;
 
             if (ms < gold) {
                 _current_split_row.delta_image.fillAmount = (float)ms/gold;
-            } else if (_timer.stopwatch.ElapsedMilliseconds < _current_split_row.model.pb){
+            } else if (_timer.elapsed_ms < _current_split_row.model.pb){
                 _current_split_row.delta_image.color = Color.green;
             } else {
                 _current_split_row.delta_image.color = Color.red;
             }
             
-            if (_timer.stopwatch.ElapsedMilliseconds < _current_split_row.model.pb) {
+            if (_timer.elapsed_ms < _current_split_row.model.pb) {
                 _pb_compare.color = Color.green;
                 float fill = (float) ms/(_current_split_row.model.pb-split_time);
                 _pb_compare.fillAmount = fill;
@@ -248,9 +297,18 @@ public class SplitsManager : MonoBehaviour {
                 _pb_compare.color = Color.red;
             }
 
-            long pb_time_left = _current_split_row.model.pb - _timer.stopwatch.ElapsedMilliseconds;
+            long pb_time_left = _current_split_row.model.pb - _timer.elapsed_ms;
             System.TimeSpan ts = System.TimeSpan.FromMilliseconds(pb_time_left);
-            string ts_string = ts.Minutes == 0 ? @"s\.f" : @"m\:ss";
+
+           // ts = System.TimeSpan.FromHours(2.31f);
+            string ts_string = @"hh\:mm\:ss";
+            if (ts.Hours == 0) {
+                if (ts.Minutes == 0) {
+                    ts_string = @"s\.f";
+                } else {
+                    ts_string = @"mm\:ss";
+                }
+            }
             if (pb_time_left > 0) {
                 _current_split_row.delta.color = Color.green;
                 _current_split_row.delta.text = "-" + ts.ToString(ts_string);
@@ -259,14 +317,18 @@ public class SplitsManager : MonoBehaviour {
                 _current_split_row.delta.text = "+" + ts.ToString(ts_string);
             }
 
-            _run_total.value = (float)_timer.stopwatch.ElapsedMilliseconds / _model.run.split_meta[_model.run.split_meta.Count-1].pb;
+            _run_total.value = (float)_timer.elapsed_ms / _model.run.split_meta[_model.run.split_meta.Count-1].pb;
         }
 
         if (Input.GetKeyDown(KeyCode.Space)) {
-            if (_timer.stopwatch.IsRunning == false) {
-                if (_timer.stopwatch.ElapsedMilliseconds > 0) {
+            if (_timer.state == Timer.TimeState.Stopped) {
+                if (_timer.elapsed_ms > 0) {
                     reset();
                 } else {
+                    // we force the view back to PB when we start a run, at the moment at least I just want the
+                    // details viewable when not in a run
+                    _view_mode = ViewMode.PB;
+                    change_view_mode(_view_mode);
                     start_run();
                 }
             } else {
@@ -276,6 +338,19 @@ public class SplitsManager : MonoBehaviour {
             skip_split();
         } else if (Input.GetKeyDown(KeyCode.Alpha3)) {
             restart_run();
+        }
+
+        if (Input.GetKeyDown(KeyCode.N)) {
+            if (_timer.state == Timer.TimeState.Stopped) {
+                _view_mode = (ViewMode)(((int)(_view_mode) + 1) % (int)ViewMode.COUNT);
+                change_view_mode(_view_mode);
+            }
+        }
+        if (Input.GetKeyDown(KeyCode.L)) {
+            limerick_mode = !_limerick_mode;
+        }
+        if (Input.GetKeyDown(KeyCode.P)) {
+            _timer.toggle_pause();
         }
     }
 
@@ -291,11 +366,16 @@ public class SplitsManager : MonoBehaviour {
     void OnEnable() {
         SplitRow i = transform.GetChild(transform.childCount -1).GetComponent<SplitRow>();
         i.thumb_updated += set_final_split;
+        on_run_end();
     }
 
     void Awake() {
         _id = PlayerPrefs.GetString("active_game");
         _model = GameView.load_game_model(_id);
+
+        if (_model.run.game_meta.limerick) {
+            _limerick_mode = true;
+        }
         var start_offset = _model.run.game_meta.start_offset;
         if(start_offset != null && start_offset != "") {
             _timer.offset = float.Parse(_model.run.game_meta.start_offset);
@@ -306,6 +386,9 @@ public class SplitsManager : MonoBehaviour {
         foreach (speedrun.SplitMeta s in _model.run.split_meta) {
             SplitRow split = SplitRow.Instantiate(_split_prefab, transform);
             split.model = s;
+            if (_limerick_mode) {
+                split.limerick_mode = true;
+            }
         }
 
         if (_model.run.game_meta.finished_count == 0) {

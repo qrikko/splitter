@@ -1913,6 +1913,7 @@ GameObject:
   - component: {fileID: 729605166}
   - component: {fileID: 729605169}
   - component: {fileID: 729605168}
+  - component: {fileID: 729605170}
   - component: {fileID: 729605167}
   m_Layer: 5
   m_Name: Scrollbar Vertical
@@ -2025,6 +2026,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 729605165}
   m_CullTransparentMesh: 0
+--- !u!114 &729605170
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 729605165}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67e4aa37ce69b1cdead9987b4ab79a20, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _min_offset: 0.3
 --- !u!1 &772721967
 GameObject:
   m_ObjectHideFlags: 0
@@ -2543,8 +2557,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 276.89, y: -11}
-  m_SizeDelta: {x: 50, y: 18}
+  m_AnchoredPosition: {x: 182.5, y: -9.999994}
+  m_SizeDelta: {x: 96.35, y: 18}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &793808407
 MonoBehaviour:
@@ -2630,7 +2644,7 @@ MonoBehaviour:
   m_firstVisibleCharacter: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: -31.573593, y: 0, z: 0, w: 0}
+  m_margin: {x: 1.6321292, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 793808407}
     characterCount: 1
@@ -3138,6 +3152,31 @@ PrefabInstance:
     - target: {fileID: 7744548347710935859, guid: 2ff008b223cc6c04eac767660d6a8d99,
         type: 3}
       propertyPath: m_UseSpriteMesh
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6843935117592799091, guid: 2ff008b223cc6c04eac767660d6a8d99,
+        type: 3}
+      propertyPath: m_Colors.m_PressedColor.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6843935117592799091, guid: 2ff008b223cc6c04eac767660d6a8d99,
+        type: 3}
+      propertyPath: m_Colors.m_PressedColor.g
+      value: 0.754717
+      objectReference: {fileID: 0}
+    - target: {fileID: 6843935117592799091, guid: 2ff008b223cc6c04eac767660d6a8d99,
+        type: 3}
+      propertyPath: m_Colors.m_PressedColor.b
+      value: 0.32983923
+      objectReference: {fileID: 0}
+    - target: {fileID: 6843935117592799091, guid: 2ff008b223cc6c04eac767660d6a8d99,
+        type: 3}
+      propertyPath: m_Transition
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6843935117592799091, guid: 2ff008b223cc6c04eac767660d6a8d99,
+        type: 3}
+      propertyPath: m_Navigation.m_Mode
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -4821,12 +4860,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 206ce59abe60260409b58af1dcb624ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _limerick_mode: 0
   _split_prefab: {fileID: 1248218559899441262, guid: 05675f47248483b43b4d8bf03f903f24,
     type: 3}
   _pb_compare: {fileID: 1550400657}
   _timer: {fileID: 1136552822}
   _run_total: {fileID: 517313623}
   _animator: {fileID: 268481531}
+  _scrollbar: {fileID: 729605170}
 --- !u!1 &1987841961
 GameObject:
   m_ObjectHideFlags: 0
@@ -4861,8 +4902,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 330, y: -11}
-  m_SizeDelta: {x: 50, y: 18}
+  m_AnchoredPosition: {x: 295.41, y: -11}
+  m_SizeDelta: {x: 119.18, y: 18}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1987841963
 MonoBehaviour:
@@ -4948,7 +4989,7 @@ MonoBehaviour:
   m_firstVisibleCharacter: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: -31.573593, y: 0, z: 0, w: 0}
+  m_margin: {x: 1.6321256, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 1987841963}
     characterCount: 1
@@ -5688,6 +5729,7 @@ GameObject:
   - component: {fileID: 8050477499373457586}
   - component: {fileID: 8050477499373457584}
   - component: {fileID: 8050477499373457585}
+  - component: {fileID: 8050477499373457588}
   m_Layer: 5
   m_Name: split_time
   m_TagString: Untagged
@@ -5695,3 +5737,15 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &8050477499373457588
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8050477499373457587}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a647cb7f66b9d7010b05d13ec5c3a388, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

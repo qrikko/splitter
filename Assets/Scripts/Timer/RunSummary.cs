@@ -64,14 +64,20 @@ public class RunSummary : MonoBehaviour {
     }
 
     private void Update() {
-        if (_timer.stopwatch.IsRunning)
-        {
-            long ms = _timer.stopwatch.ElapsedMilliseconds - _last_split_time;
+        if (_timer.state == Timer.TimeState.Running) {
+            long ms = _timer.elapsed_ms - _last_split_time;
             _glod_comparison.fillAmount = 1.0f - (float)ms / _gold_time;
 
-            long pb_time_left = _pb_time - _timer.stopwatch.ElapsedMilliseconds;
+            long pb_time_left = _pb_time - _timer.elapsed_ms;
             System.TimeSpan ts = System.TimeSpan.FromMilliseconds(pb_time_left);
-            string ts_string = ts.Minutes == 0 ? @"s\.f" : @"mm\:ss";
+            string ts_string = @"HH\:mm\:ss";
+            if (ts.Hours == 0) {
+                if (ts.Minutes == 0) {
+                    ts_string = @"s\.f";
+                } else {
+                    ts_string = @"mm\:ss";
+                }
+            }
 
             if (pb_time_left > 0) {
                 _split_delta.color = Color.green;
@@ -82,7 +88,7 @@ public class RunSummary : MonoBehaviour {
             }
 
             // update total time
-            long run_time_left = _run_pb - _timer.stopwatch.ElapsedMilliseconds;
+            long run_time_left = _run_pb - _timer.elapsed_ms;
             System.TimeSpan time = System.TimeSpan.FromMilliseconds(run_time_left);
             if (run_time_left > 0)
             {

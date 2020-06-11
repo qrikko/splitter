@@ -17,7 +17,8 @@ public class SumOfBest : MonoBehaviour
     }
 
     private void update_attempts(int num, int finished) {
-        _attempts.text = "[" + num + "/" + finished + "]";
+        _attempts.text = "[" + num + "/" + finished + "]" + " " + ((float)finished/num*100.0).ToString("0.0") + "%";
+        //_attempts.text = String.Format("{0} {1}")
     }
 
     private void update_gold() {

@@ -1,17 +1,34 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System;
 using System.Diagnostics;
+
 using TMPro;
+using UnityEngine;
 
 public class Timer : MonoBehaviour
 {
+    public enum TimeState {
+        Stopped,
+        Paused,
+        Running
+    };
+    private TimeState _state = TimeState.Stopped;
+    public TimeState state {
+        get {return _state;}
+    }
+
     [SerializeField] private TMP_Text _text = null;
 
     private string _initial_text;
 
     private Stopwatch _stopwatch = new Stopwatch();
-    public Stopwatch stopwatch { get { return _stopwatch; } }
+  //  public Stopwatch stopwatch { get { return _stopwatch; } }
+
+    public long elapsed_ms {
+        get { return _stopwatch.ElapsedMilliseconds; }
+    }
+    public TimeSpan elapsed_ts {
+        get { return _stopwatch.Elapsed; }
+    }
 
     private float _offset;
     private Stopwatch _offset_stopwatch = new Stopwatch();
@@ -19,10 +36,11 @@ public class Timer : MonoBehaviour
     private VertexGradient _initial_gradient;
 
     public void end_run(long pb) {
-        stopwatch.Stop();
+        _state = TimeState.Stopped;
+        _stopwatch.Stop();
 
         VertexGradient gradient;
-        if (stopwatch.ElapsedMilliseconds < pb || pb==0) {
+        if (_stopwatch.ElapsedMilliseconds < pb || pb==0) {
             gradient.topLeft = Color.cyan;
             gradient.topRight = Color.cyan;
             gradient.bottomLeft = Color.blue;
@@ -64,13 +82,26 @@ public class Timer : MonoBehaviour
         //_initial_text = _text.text;
     }
 
+    public void pause() {
+        _state = TimeState.Paused;
+        _stopwatch.Stop();
+    }
+    public void resume() {
+        _state = TimeState.Running;
+        _stopwatch.Start();
+    }
+
     public void toggle_pause()
     {
-        if (_stopwatch.IsRunning)
+        if (Input.anyKeyDown) {
+            return;
+        }
+        if (_state == TimeState.Running)
         {
+            _state = TimeState.Paused;
             _stopwatch.Stop();
-        } else
-        {
+        } else if(_state == TimeState.Paused){
+            _state = TimeState.Running;
             _stopwatch.Start();
         }
     }
@@ -78,6 +109,7 @@ public class Timer : MonoBehaviour
     public void reset()
     {
         _text.colorGradient = _initial_gradient;
+        _state = TimeState.Stopped;
         _stopwatch.Stop();
         _stopwatch.Reset();
         _text.text = _initial_text;
@@ -94,13 +126,24 @@ public class Timer : MonoBehaviour
 //        System.TimeSpan ts = _stopwatch.Elapsed;
         //ts = ts.Subtract(System.TimeSpan.FromSeconds(-_offset));
         if (ts.Ticks < 0) {
-            _text.text = string.Format("-{0:00}:{1:00}<size='40'>.{2:ff}</size>", 
-                Mathf.Abs(ts.Minutes), 
-                Mathf.Abs(ts.Seconds), 
-                ts
+            _text.text = "-";
+        } else {
+            _text.text = "";
+        }
+
+        if (ts.Hours == 0) {
+            _text.text += string.Format("{0:00}:{1:00}<size='40'>.{2:ff}</size>",
+                    Mathf.Abs(ts.Minutes),
+                    Mathf.Abs(ts.Seconds),
+                    ts
             );
         } else {
-            _text.text = string.Format("{0:00}:{1:00}<size='40'>.{2:ff}</size>", ts.Minutes, ts.Seconds, ts);
+            _text.text += string.Format("{0:0}:{1:00}:{2:00}<size='40'>.{3:ff}</size>",
+                    Mathf.Abs(ts.Hours),
+                    Mathf.Abs(ts.Minutes),
+                    Mathf.Abs(ts.Seconds),
+                    ts
+            );
         }
         //_text.text = string.Format("{0:00}:{1:00}<size='40'>.{2:ff}</size>", ts.Minutes, ts.Seconds, ts);
         //_text.text = string.Format(@"{0:mm\:ss\.ff}", ts);
@@ -115,6 +158,7 @@ public class Timer : MonoBehaviour
                 _offset_stopwatch.Stop();
                 _offset_stopwatch.Reset();
                 _stopwatch.Start();
+                _state = TimeState.Running;
                 return;
             }
             format_time(_offset_stopwatch.Elapsed.Subtract(ts));

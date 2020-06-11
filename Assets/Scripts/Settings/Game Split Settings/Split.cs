@@ -1,13 +1,11 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.Networking;
-using UnityEngine.SceneManagement;
-
 using TMPro;
+using UnityEngine;
+using UnityEngine.Networking;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
-public class Split : MonoBehaviour
+public class Split : MonoBehaviour, ISelectHandler
 {
     [SerializeField] private Image _thumb = null;
     [SerializeField] private TMP_InputField _name = null;
@@ -15,13 +13,16 @@ public class Split : MonoBehaviour
     [SerializeField] private TMP_InputField _best_segment = null;
     [SerializeField] private FileBrowser _imagepicker = null;
 
+    public delegate void select_delegate(speedrun.SplitMeta model);
+    public static select_delegate on_select;
+
     private string _thumb_path;
-    
+
     private speedrun.SplitMeta _model;
-    public speedrun.SplitMeta model { 
-        get { 
-            return _model;
-        } set {
+    public speedrun.SplitMeta model {
+    get {
+        return _model;
+    } set {
             _model = value;
             _name.text = _model.name;
             _split_time.text = _model.pb.ToString();
@@ -29,6 +30,11 @@ public class Split : MonoBehaviour
             _thumb_path = _model.thumb_path;
             StartCoroutine (fetch_thumb());
         }
+    }
+
+    public void OnSelect (BaseEventData eventData)
+    {
+        on_select(_model);
     }
 
     public void thumb_selected(string path) {
