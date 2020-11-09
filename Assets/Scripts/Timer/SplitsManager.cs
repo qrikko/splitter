@@ -178,6 +178,13 @@ public class SplitsManager : MonoBehaviour {
     }
 
     public void skip_split() {
+        if (_split_index+1 > _model.run.split_meta.Count) {
+            // can't skip if it is last split!
+            return;
+        }
+
+        _split_index++;
+
         speedrun.Split split = create_split(-1);
         _current_split_row.delta.text = "-";
         split.split_duration = 0; // or -1 or something?
@@ -192,6 +199,32 @@ public class SplitsManager : MonoBehaviour {
                 _current_split_row.model.gold,
                 _current_split_row.model.pb
         );
+    }
+    
+    public void unsplit() {
+        if (_split_index -1 < 0) {
+            // can't unsplit past first split!
+            return;
+        }
+
+        _split_index--;
+
+        // clean up current row
+        _current_split_row.delta.text = "-";
+        //_current_split_row.time 
+        
+        // reactivate the last split.
+        //_previous_split = split;
+        _current_split_row = GetComponentsInChildren<SplitRow>()[_split_index];
+        _current_split_row.split_in();
+
+        on_split(
+            _current_split_row.model.name,
+            _previous_split.split_time,
+            _current_split_row.model.gold,
+            _current_split_row.model.pb
+        );
+
     }
 
     public void split () {
@@ -320,7 +353,7 @@ public class SplitsManager : MonoBehaviour {
             _run_total.value = (float)_timer.elapsed_ms / _model.run.split_meta[_model.run.split_meta.Count-1].pb;
         }
 
-        if (Input.GetKeyDown(KeyCode.Space)) {
+        if (Input.GetKeyDown("[1]")) {
             if (_timer.state == Timer.TimeState.Stopped) {
                 if (_timer.elapsed_ms > 0) {
                     reset();
@@ -334,10 +367,12 @@ public class SplitsManager : MonoBehaviour {
             } else {
                 split();
             }
-        } else if(Input.GetKeyDown(KeyCode.S)) {
+        } else if(Input.GetKeyDown("[2]")) {
             skip_split();
-        } else if (Input.GetKeyDown(KeyCode.Alpha3)) {
+        } else if (Input.GetKeyDown("[3]")) {
             restart_run();
+        } else if (Input.GetKeyDown("[8]")) {
+            unsplit();
         }
 
         if (Input.GetKeyDown(KeyCode.N)) {
