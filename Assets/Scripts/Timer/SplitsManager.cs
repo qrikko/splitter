@@ -191,7 +191,9 @@ public class SplitsManager : MonoBehaviour {
         GetComponentsInChildren<SplitRow>()[_split_index].split_in(); // might need to tell it it can't gold!
 
         _previous_split = split;
+        _current_split_row.split_out();
         _current_split_row = GetComponentsInChildren<SplitRow>()[_split_index];
+        _current_split_row.split_in();
 
         on_split(
                 _current_split_row.model.name,
@@ -199,6 +201,7 @@ public class SplitsManager : MonoBehaviour {
                 _current_split_row.model.gold,
                 _current_split_row.model.pb
         );
+        on_update_split_thumb(_current_split_row.thumb);
     }
     
     public void unsplit() {
@@ -215,6 +218,7 @@ public class SplitsManager : MonoBehaviour {
         
         // reactivate the last split.
         //_previous_split = split;
+        _current_split_row.split_out();
         _current_split_row = GetComponentsInChildren<SplitRow>()[_split_index];
         _current_split_row.split_in();
 
@@ -224,7 +228,7 @@ public class SplitsManager : MonoBehaviour {
             _current_split_row.model.gold,
             _current_split_row.model.pb
         );
-
+        on_update_split_thumb(_current_split_row.thumb);
     }
 
     public void split () {
