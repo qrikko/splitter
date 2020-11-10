@@ -331,6 +331,7 @@ public class SplitsManager : MonoBehaviour {
                 _pb_compare.fillAmount = fill;
                 _current_split_row.progress(fill);
             } else {
+                _current_split_row.progress(1.0f);
                 _pb_compare.color = Color.red;
             }
 
