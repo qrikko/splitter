@@ -26,6 +26,8 @@ public class FileBrowserRow : MonoBehaviour
     }
 
     private IEnumerator fetch_thumb() {
+        // this is useful for Images, not so much for other files, need a way to load apropriate
+        // graphics for types other than images that can themself be used as thumbs..
         string path = "file://" + _info.FullName;
         UnityWebRequest request = UnityWebRequestTexture.GetTexture(path);
         yield return request.SendWebRequest();
