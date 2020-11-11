@@ -49,7 +49,7 @@ public class Split : MonoBehaviour, ISelectHandler
         
         FileBrowser imagepicker = Instantiate(_imagepicker);
         imagepicker.gameObject.SetActive(true);
-        imagepicker.split = this;        
+        imagepicker.split = this;    
     }
 
     private IEnumerator fetch_thumb() {

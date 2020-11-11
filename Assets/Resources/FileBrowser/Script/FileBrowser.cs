@@ -8,6 +8,15 @@ public class FileBrowser : MonoBehaviour
     private Split _split;
     public Split split { set { _split = value;}}
 
+    public delegate void FileBrowserCallback(string path);
+    private FileBrowserCallback _callback = null;
+
+    [SerializeField] private FileView _file = null;
+
+    public void show(FileBrowserCallback callback, string[] filters=null) {                
+        _callback = callback;
+        _file.set_filters(filters);
+    }
 
     void OnEnable() {
         Debug.Log("PrintOnEnable: script was enabled");
@@ -19,8 +28,11 @@ public class FileBrowser : MonoBehaviour
     }
     
     public void selected_image(string path) {
+        _callback(path);
         PlayerPrefs.SetString("browser_path", path);
-        _split.thumb_selected(path);
+        if (_split) {
+            _split.thumb_selected(path);
+        }
         Destroy (transform.gameObject.GetComponentInParent<Canvas>().gameObject);
 
         //Destroy();

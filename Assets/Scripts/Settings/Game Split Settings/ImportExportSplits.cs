@@ -4,15 +4,14 @@ using UnityEngine;
 
 public class ImportExportSplits : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [SerializeField] private FileBrowser _filepicker = null;
+    public void on_click() {
+        FileBrowser filepicker = Instantiate(_filepicker);
+        filepicker.gameObject.SetActive(true);
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        string[] filters = {".lss"};
+        filepicker.show((string path) => {
+            Debug.Log(path);
+        }, filters);
     }
 }

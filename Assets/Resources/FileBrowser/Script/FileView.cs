@@ -12,6 +12,17 @@ public class FileView : MonoBehaviour
     [SerializeField] private FolderBrowserRow _folder_row_prefab = null;
     [SerializeField] private FileBrowserRow _file_row_prefab = null;
 
+    // make sure this is not the default, it should be provided for the image case..
+    private List<string> _extensions = new List<string>(){ ".png", ".jpg", ".jpeg", ".bmp", ".tga", ".gif", ".lss" };
+    //private List<string> _extensions = new List<string>();
+    public void set_filters (string[] filters) {
+        _extensions.Clear();
+        foreach(string s in filters) {
+            _extensions.Add(s);
+        }
+    }
+
+
     private DirectoryInfo _current_folder;
 
     public void go_up()
@@ -25,10 +36,9 @@ public class FileView : MonoBehaviour
 
     public void list_files(DirectoryInfo di) {
         FileInfo[] files = di.GetFiles();
-        List<string> extensions = new List<string>(){ ".png", ".jpg", ".jpeg", ".bmp", ".tga", ".gif" };
-
+        
         foreach (FileInfo file in files) {
-            if (extensions.Contains(file.Extension)) {
+            if (_extensions.Contains(file.Extension)) {
                 FileBrowserRow row = GameObject.Instantiate(_file_row_prefab, _file_container.transform);
                 row.info = file;
             }
