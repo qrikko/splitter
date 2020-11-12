@@ -11,7 +11,7 @@ public class Split : MonoBehaviour, ISelectHandler
     [SerializeField] private TMP_InputField _name = null;
     [SerializeField] private TMP_InputField _split_time = null;
     [SerializeField] private TMP_InputField _best_segment = null;
-    [SerializeField] private FileBrowser _imagepicker = null;
+    [SerializeField] private FileBrowser _filepicker = null;
 
     public delegate void select_delegate(speedrun.SplitMeta model);
     public static select_delegate on_select;
@@ -47,9 +47,17 @@ public class Split : MonoBehaviour, ISelectHandler
         // gotten from file browser        
         //UnityEngine.SceneManagement.SceneManager.LoadScene("FileBrowser", UnityEngine.SceneManagement.LoadSceneMode.Additive);
         
-        FileBrowser imagepicker = Instantiate(_imagepicker);
-        imagepicker.gameObject.SetActive(true);
-        imagepicker.split = this;    
+        FileBrowser filepicker = Instantiate(_filepicker);
+        filepicker.gameObject.SetActive(true);
+
+        string[] filters = {".png", ".jpg", ".jpeg", ".bmp", ".tga", ".gif"};
+        filepicker.show((string path) => {
+            Debug.Log(path);
+        }, filters);
+
+//        FileBrowser imagepicker = Instantiate(_imagepicker);
+//        imagepicker.gameObject.SetActive(true);
+//        imagepicker.split = this;    
     }
 
     private IEnumerator fetch_thumb() {

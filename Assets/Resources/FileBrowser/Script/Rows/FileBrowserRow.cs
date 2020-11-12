@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking;
 using UnityEngine.UI;
 
 using System.IO;
@@ -21,33 +20,20 @@ public class FileBrowserRow : MonoBehaviour
     public delegate void file_clicked_action(string path);
     public static event file_clicked_action file_clicked; 
 
+    [SerializeField] private FileBrowserSettings _settings;
+
     public void row_clicked() {
         file_clicked(_info.FullName);
     }
 
-    private IEnumerator fetch_thumb() {
-        // this is useful for Images, not so much for other files, need a way to load apropriate
-        // graphics for types other than images that can themself be used as thumbs..
-        string path = "file://" + _info.FullName;
-        UnityWebRequest request = UnityWebRequestTexture.GetTexture(path);
-        yield return request.SendWebRequest();
-
-        if (request.isNetworkError || request.isHttpError)
-        {
-            Debug.Log(request.error);
-        } else
-        {
-            Texture2D texture = ((DownloadHandlerTexture)request.downloadHandler).texture;
-            Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(.5f, .5f));
-            _thumb.sprite = sprite;
-            _thumb.preserveAspect = true;
-        }
-    }
+    
     void Awake () {
         _thumb = GetComponent<Image>();
     }
+
     // Start is called before the first frame update
     void Start() {
-        StartCoroutine(fetch_thumb());
+        _thumb.sprite = _settings.get_thumb_for_type(_info.Extension);
+        _thumb.preserveAspect = true;
     }
 }

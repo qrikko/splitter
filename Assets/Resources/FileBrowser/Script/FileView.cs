@@ -13,7 +13,7 @@ public class FileView : MonoBehaviour
     [SerializeField] private FileBrowserRow _file_row_prefab = null;
 
     // make sure this is not the default, it should be provided for the image case..
-    private List<string> _extensions = new List<string>(){ ".png", ".jpg", ".jpeg", ".bmp", ".tga", ".gif", ".lss" };
+    private List<string> _extensions = new List<string>(){ ".png", ".jpg", ".jpeg", ".bmp", ".tga", ".gif"};
     //private List<string> _extensions = new List<string>();
     public void set_filters (string[] filters) {
         _extensions.Clear();
