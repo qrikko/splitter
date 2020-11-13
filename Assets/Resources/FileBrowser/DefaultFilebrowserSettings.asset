@@ -13,3 +13,7 @@ MonoBehaviour:
   m_Name: DefaultFilebrowserSettings
   m_EditorClassIdentifier: 
   _default: {fileID: 21300000, guid: 73eb95c5922853e69bf7bc9ed2048947, type: 3}
+  _image_mappings:
+  - extensions:
+    - .lss
+    image: {fileID: 21300000, guid: 82b438bc918e9ca88ad02ca2209b2e2a, type: 3}

@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Networking;
+using System.IO;
 
-public struct ImageMap {
+[System.Serializable]
+public struct ThumbMap {
     public List<string> extensions;
     public Sprite image;
 }
@@ -14,13 +15,19 @@ public struct ImageMap {
 public class FileBrowserSettings : ScriptableObject
 {
     public Sprite _default;
-    public List<ImageMap> _image_mappings;
+    public List<ThumbMap> _thumb_mappings;
     
     private string[] _image_extensions = {".png", ".jpg", ".jpeg", ".bmp", ".tga", ".gif"};
 
-    public Sprite get_thumb_for_type(string type) {
-        if (System.Array.IndexOf(_image_extensions, type) >= 0) {
-            Debug.Log("Image File, need to load and return the specific thumb!");
+    public Sprite get_thumb_for_type(FileInfo info) {
+        if (System.Array.IndexOf(_image_extensions, info.Extension) >= 0) {
+            return load_sprite_from_file(info.FullName);
+        }
+        foreach(ThumbMap image_map in _thumb_mappings) {
+            if(image_map.extensions.IndexOf(info.Extension) >= 0) {
+            //if (System.Array.IndexOf(image_map.extensions, info.Extension) >= 0) {
+                return image_map.image;
+            }
         }
         return _default;
     }
@@ -29,23 +36,17 @@ public class FileBrowserSettings : ScriptableObject
         //_image_mappings.Add(new ImageMap{} );
     }
 
-    private IEnumerator fetch_thumb(string file_path) {
-        // this is useful for Images, not so much for other files, need a way to load apropriate
-        // graphics for types other than images that can themself be used as thumbs..
-        string path = "file://" + file_path;
-        UnityWebRequest request = UnityWebRequestTexture.GetTexture(path);
-        yield return request.SendWebRequest();
+    private static Sprite load_sprite_from_file(string filePath) {
+        Sprite sprite = null;
+        
+        if (File.Exists(filePath)) {
+            byte[] fileData = File.ReadAllBytes(filePath);
+            Texture2D tex = new Texture2D(2, 2);
+            tex.LoadImage(fileData); //..this will auto-resize the texture dimensions.
 
-        if (request.isNetworkError || request.isHttpError)
-        {
-            Debug.Log(request.error);
-        } else
-        {
-            Texture2D texture = ((DownloadHandlerTexture)request.downloadHandler).texture;
-            Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(.5f, .5f));
-//            _thumb.sprite = sprite;
-//            _thumb.preserveAspect = true;
+            sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(.5f, .5f));            
         }
+        return sprite;
     }
 
 }

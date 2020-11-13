@@ -33,7 +33,7 @@ public class FileBrowserRow : MonoBehaviour
 
     // Start is called before the first frame update
     void Start() {
-        _thumb.sprite = _settings.get_thumb_for_type(_info.Extension);
+        _thumb.sprite = _settings.get_thumb_for_type(_info);
         _thumb.preserveAspect = true;
     }
 }
