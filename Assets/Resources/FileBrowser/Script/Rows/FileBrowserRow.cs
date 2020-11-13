@@ -9,6 +9,7 @@ using TMPro;
 public class FileBrowserRow : MonoBehaviour
 {
     private Image _thumb;
+    private TMP_Text _filename;
     private FileInfo _info;
     public FileInfo info { 
         set { 
@@ -28,12 +29,15 @@ public class FileBrowserRow : MonoBehaviour
 
     
     void Awake () {
-        _thumb = GetComponent<Image>();
+        _thumb = GetComponentInChildren<Image>();
+        _filename = GetComponentInChildren<TMP_Text>();
     }
 
     // Start is called before the first frame update
     void Start() {
         _thumb.sprite = _settings.get_thumb_for_type(_info);
         _thumb.preserveAspect = true;
+
+        _filename.text = _info.Name;
     }
 }
