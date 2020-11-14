@@ -12,6 +12,11 @@ public class FileBrowser : MonoBehaviour
     private FileBrowserCallback _callback = null;
 
     [SerializeField] private FileView _file = null;
+    [SerializeField] private FileBrowserSettings _settings = null;
+
+    public void set_filters (System.Int32 index) {
+        _file.set_filters(_settings.thumb_mappings[index].extensions.ToArray());
+    }
 
     public void show(FileBrowserCallback callback, string[] filters=null) {                
         _callback = callback;

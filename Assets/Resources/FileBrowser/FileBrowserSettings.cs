@@ -6,6 +6,7 @@ using System.IO;
 
 [System.Serializable]
 public struct ThumbMap {
+    public string name;
     public List<string> extensions;
     public Sprite image;
 }
@@ -15,18 +16,22 @@ public struct ThumbMap {
 public class FileBrowserSettings : ScriptableObject
 {
     public Sprite _default;
-    public List<ThumbMap> _thumb_mappings;
+    [SerializeField] private List<ThumbMap> _thumb_mappings;
+    public List<ThumbMap> thumb_mappings {get {return _thumb_mappings;}}
     
-    private string[] _image_extensions = {".png", ".jpg", ".jpeg", ".bmp", ".tga", ".gif"};
+    //private string[] _image_extensions = {".png", ".jpg", ".jpeg", ".bmp", ".tga", ".gif"};
 
     public Sprite get_thumb_for_type(FileInfo info) {
-        if (System.Array.IndexOf(_image_extensions, info.Extension) >= 0) {
-            return load_sprite_from_file(info.FullName);
-        }
+        //if (System.Array.IndexOf(_image_extensions, info.Extension) >= 0) {
+        //    return load_sprite_from_file(info.FullName);
+        //}
         foreach(ThumbMap image_map in _thumb_mappings) {
             if(image_map.extensions.IndexOf(info.Extension) >= 0) {
-            //if (System.Array.IndexOf(image_map.extensions, info.Extension) >= 0) {
-                return image_map.image;
+                if (image_map.image != null) {
+                    return image_map.image;
+                } else {
+                    return load_sprite_from_file(info.FullName);
+                }
             }
         }
         return _default;

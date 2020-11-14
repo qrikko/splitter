@@ -14,6 +14,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _default: {fileID: 21300000, guid: 73eb95c5922853e69bf7bc9ed2048947, type: 3}
   _thumb_mappings:
-  - extensions:
+  - name: Livesplit splits
+    extensions:
     - .lss
     image: {fileID: 21300000, guid: 82b438bc918e9ca88ad02ca2209b2e2a, type: 3}
+  - name: Images
+    extensions:
+    - .gif
+    - .png
+    - .tga
+    - .jpg
+    - .jpeg
+    image: {fileID: 0}
+  - name: None
+    extensions: []
+    image: {fileID: 0}

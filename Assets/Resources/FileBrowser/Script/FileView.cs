@@ -20,9 +20,11 @@ public class FileView : MonoBehaviour
         foreach(string s in filters) {
             _extensions.Add(s);
         }
+        if (_current_folder != null) {
+            list_folder(_current_folder.FullName);
+        }
     }
-
-
+    
     private DirectoryInfo _current_folder;
 
     public delegate void GoUpDelegate(string path);
@@ -42,7 +44,7 @@ public class FileView : MonoBehaviour
         FileInfo[] files = di.GetFiles();
         
         foreach (FileInfo file in files) {
-            if (_extensions.Contains(file.Extension)) {
+            if (_extensions.Contains(file.Extension) || _extensions.Count == 0) {
                 FileBrowserRow row = GameObject.Instantiate(_file_row_prefab, _file_container.transform);
                 row.info = file;
             }
