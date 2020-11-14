@@ -25,6 +25,9 @@ public class FileView : MonoBehaviour
 
     private DirectoryInfo _current_folder;
 
+    public delegate void GoUpDelegate(string path);
+    public static GoUpDelegate go_up_action;
+
     public void go_up()
     {
         if (_current_folder==null || _current_folder.Parent == null) {
@@ -32,6 +35,7 @@ public class FileView : MonoBehaviour
         }
         _current_folder = _current_folder.Parent;
         list_folder(_current_folder.FullName);
+        go_up_action(_current_folder.FullName);
     }
 
     public void list_files(DirectoryInfo di) {
@@ -78,6 +82,12 @@ public class FileView : MonoBehaviour
 
     void OnEnable() {
         FolderBrowserRow.folder_clicked += list_folder;
+        BreadCrumbs.ClickAction += list_folder;
+        //FileBrowserRow.file_clicked += list_folder;
+    }
+    void OnDisable() {
+        FolderBrowserRow.folder_clicked -= list_folder;
+        BreadCrumbs.ClickAction -= list_folder;
         //FileBrowserRow.file_clicked += list_folder;
     }
 }
