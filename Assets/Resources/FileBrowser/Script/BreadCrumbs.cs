@@ -45,6 +45,7 @@ public class BreadCrumbs : MonoBehaviour
     }
 
     public void update_breadcrumbs(string path) {
+        path = (path=="/") ? "" : path;
         _current_path = path;
         
         foreach(Transform t in transform) {
@@ -56,7 +57,7 @@ public class BreadCrumbs : MonoBehaviour
             BreadCrumbButton b = BreadCrumbButton.Instantiate(_button_prefab, transform);
             b.text = d;
             if (d.Length == 0) {
-                b.text = Path.DirectorySeparatorChar.ToString();
+                b.text = "/";
             }
         }
     }

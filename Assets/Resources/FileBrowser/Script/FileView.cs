@@ -61,6 +61,7 @@ public class FileView : MonoBehaviour
         }
 
         //_up_button.info = _current_folder.Parent;
+        
         _current_folder = new DirectoryInfo(path);
 
         foreach (DirectoryInfo folder in _current_folder.GetDirectories()) {
