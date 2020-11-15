@@ -30,7 +30,10 @@ public class ImportExportSplits : MonoBehaviour
         // Run meta-data
         run.run.game_meta.name = doc.DocumentElement.SelectSingleNode("/Run/GameName").InnerText;
         run.run.game_meta.catergory = doc.DocumentElement.SelectSingleNode("/Run/CategoryName").InnerText;
-        run.run.game_meta.start_offset = doc.DocumentElement.SelectSingleNode("/Run/Offset").InnerText;
+        System.TimeSpan ts = System.TimeSpan.Parse(doc.DocumentElement.SelectSingleNode("/Run/Offset").InnerText);
+        //run.run.game_meta.start_offset = string.Format("{0}.{0}", ts.Seconds, ts.Milliseconds);
+        run.run.game_meta.start_offset = ts.Seconds + "." + ts.Milliseconds;
+        
         run.run.game_meta.attempts_count = System.Int32.Parse(doc.DocumentElement.SelectSingleNode("/Run/AttemptCount").InnerText);
 
         ////////////////
@@ -66,6 +69,7 @@ public class ImportExportSplits : MonoBehaviour
 
                 m.history.Add(split);
             }
+            run.run.split_meta.Add(m);
         }
         
         ///////////
