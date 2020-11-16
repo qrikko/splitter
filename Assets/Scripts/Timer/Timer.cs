@@ -10,7 +10,8 @@ public class Timer : MonoBehaviour
         Stopped,
         Paused,
         Running,
-        Countdown
+        Countdown,
+        Done
     };
     private TimeState _state = TimeState.Stopped;
     public TimeState state {
@@ -40,7 +41,7 @@ public class Timer : MonoBehaviour
     public static run_start_delegate on_run_start;
 
     public void end_run(long pb) {
-        _state = TimeState.Stopped;
+        _state = TimeState.Done;
         _stopwatch.Stop();
 
         VertexGradient gradient;

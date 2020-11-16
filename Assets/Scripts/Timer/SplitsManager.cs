@@ -313,6 +313,16 @@ public class SplitsManager : MonoBehaviour {
 
     //@todo: there must be things we don't need to do directly here!
     private void Update() {
+        if(_timer.state == Timer.TimeState.Done) {
+            if (Input.GetKeyDown("[3]")) {
+                restart_run();
+                if (_animator != null) {
+                    _animator.SetTrigger("stop");
+                }
+            }
+            return;
+        }
+
         if (_current_split_row != null && _timer.state == Timer.TimeState.Running) {
             float run_percent = (float)_timer.elapsed_ms / _model.run.split_meta[_model.run.split_meta.Count-1].pb;
 
@@ -385,7 +395,7 @@ public class SplitsManager : MonoBehaviour {
                 restart_run();
                 if (_animator != null) {
                     _animator.SetTrigger("stop");
-                }
+                }                
             }
         } else if (Input.GetKeyDown("[8]")) {
             if(_timer.state == Timer.TimeState.Running) {
