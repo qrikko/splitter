@@ -54,7 +54,7 @@ public class SplitsManager : MonoBehaviour {
     public delegate void reset_delegate(string split_name="");
     public static reset_delegate on_reset;
 
-    public delegate void split_delegate(string split, long split_time, long gold_time, long pb_time);
+    public delegate void split_delegate(string split, long split_time, long gold_time, long pb_time, bool skip = false);
     public static split_delegate on_split;
 
     public delegate void gold_comparison_delegatea(long time, Color c);
@@ -191,18 +191,20 @@ public class SplitsManager : MonoBehaviour {
         speedrun.Split split = create_split(-1);
         _current_split_row.delta.text = "-";
         split.split_duration = 0; // or -1 or something?
-        GetComponentsInChildren<SplitRow>()[_split_index].split_in(); // might need to tell it it can't gold!
+        //GetComponentsInChildren<SplitRow>()[_split_index].split_in(); // might need to tell it it can't gold!
 
         _previous_split = split;
         _current_split_row.split_out();
         _current_split_row = GetComponentsInChildren<SplitRow>()[_split_index];
-        _current_split_row.split_in();
+        _current_split_row.split_in(true);
+        
 
         on_split(
                 _current_split_row.model.name,
                 _previous_split.split_time,
                 _current_split_row.model.gold,
-                _current_split_row.model.pb
+                _current_split_row.model.pb,
+                true
         );
         on_update_split_thumb(_current_split_row.thumb);
     }
@@ -221,7 +223,7 @@ public class SplitsManager : MonoBehaviour {
         
         // reactivate the last split.
         //_previous_split = split;
-        _current_split_row.split_out();
+        _current_split_row.split_out(true);
         _current_split_row = GetComponentsInChildren<SplitRow>()[_split_index];
         _current_split_row.split_in();
 
@@ -229,7 +231,8 @@ public class SplitsManager : MonoBehaviour {
             _current_split_row.model.name,
             _previous_split.split_time,
             _current_split_row.model.gold,
-            _current_split_row.model.pb
+            _current_split_row.model.pb,
+            true
         );
         on_update_split_thumb(_current_split_row.thumb);
     }
@@ -260,7 +263,8 @@ public class SplitsManager : MonoBehaviour {
         long split_gold = _model.run.split_meta[_split_index].gold;
         split.split_duration = split.split_time - (_previous_split == null ? 0 : _previous_split.split_time);
 
-        if (split.split_duration < split_gold || split_gold==0) {
+
+        if (_current_split_row.skipped == false && (split.split_duration < split_gold || split_gold==0)) {
             long old_gold = _model.run.split_meta[_split_index].gold;
             _model.run.split_meta[_split_index].gold = split.split_duration;
             _current_split_row.GetComponent<Image>().color = new Color(1.0f, 0.92f, 0.0f, 0.25f);
@@ -285,11 +289,8 @@ public class SplitsManager : MonoBehaviour {
         } else {
             GetComponentsInChildren<SplitRow>()[_split_index].split_in();
 
-            Debug.Log(_split_index + " " + _model.run.split_meta.Count);
-
             float offset = (float)_split_index/_model.run.split_meta.Count;
             if (_split_index+1 == _model.run.split_meta.Count) {
-                Debug.Log("OFFSET NOLL!");
                 offset = 1.0f;
             }
             _scrollbar.split(offset);
@@ -313,12 +314,9 @@ public class SplitsManager : MonoBehaviour {
 
     //@todo: there must be things we don't need to do directly here!
     private void Update() {
-        if(_timer.state == Timer.TimeState.Done) {
+        if(_timer.state == Timer.TimeState.Done || _timer.state == Timer.TimeState.Countdown) {
             if (Input.GetKeyDown("[3]")) {
                 restart_run();
-                if (_animator != null) {
-                    _animator.SetTrigger("stop");
-                }
             }
             return;
         }

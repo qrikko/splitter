@@ -50,12 +50,9 @@ namespace speedrun
             {
                 yield return request.SendWebRequest();
 
-                if (request.isNetworkError)
-                {
+                if (request.isNetworkError) {
                     Debug.Log("Error: " + request.error);
-                } else
-                {
-                    Debug.Log("\nRecieved: " + request.downloadHandler.text);
+                } else {
                     GameModel game_list = JsonUtility.FromJson<GameModel>(request.downloadHandler.text);
 
                     // Loop through user.data, and for each create a new row from a prefab
@@ -116,7 +113,6 @@ namespace speedrun
                     Debug.Log("Error: " + request.error);
                 } else
                 {
-                    Debug.Log("\nRecieved: " + request.downloadHandler.text);
                     GameListModel game_list = JsonUtility.FromJson<GameListModel>(request.downloadHandler.text);
 
                     // Loop through user.data, and for each create a new row from a prefab

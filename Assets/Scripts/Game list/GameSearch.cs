@@ -25,15 +25,11 @@ public class GameSearch : MonoBehaviour
         using (UnityWebRequest request = UnityWebRequest.Get(uri))
         {
             request.SetRequestHeader("Content-Type", "application/json");
-            request.chunkedTransfer = false;
             yield return request.SendWebRequest();
 
-            if (request.isNetworkError)
-            {
+            if (request.isNetworkError) {
                 Debug.Log("Error: " + request.error);
-            } else
-            {
-                Debug.Log("\nRecieved: " + request.downloadHandler.text);
+            } else {
                 GameSearchModel game_list = JsonUtility.FromJson<GameSearchModel>(request.downloadHandler.text);
 
                 foreach (Transform child in _game_list_content.transform)

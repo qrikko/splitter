@@ -95,17 +95,12 @@ namespace speedrun {
             {
                 yield return request.SendWebRequest();
 
-                if (request.isNetworkError)
-                {
+                if (request.isNetworkError) {
                     Debug.Log("Error: " + request.error);
-                } else
-                {
-                    //Debug.Log("\nRecieved: " + request.downloadHandler.text);
+                } else {
                     _game_model_cache[game_id] = JsonConvert.DeserializeObject<speedrun.GameModel>(request.downloadHandler.text);
 
                     callback(_game_model_cache[game_id]);
-                    //string path = Application.persistentDataPath + "/" + _model.data.id;
-                    //Directory.CreateDirectory(path);
                 }
             }
         }

@@ -100,6 +100,8 @@ public class SplitRow : MonoBehaviour {
     private Color _initial_color;
     public Color initial_color { get { return _initial_color; } }
 
+    private bool _skipped;
+    public bool skipped {get {return _skipped;}}
     public void reset() {
         _bg_fill.color = _empty_color;
         _bg_fill.CrossFadeAlpha(1.0f, 0.0f, true);
@@ -107,7 +109,9 @@ public class SplitRow : MonoBehaviour {
         GetComponent<Image>().sprite = _initial_background;
     }
 
-    public void split_in() {
+    public void split_in(bool skipped = false) {
+        _skipped = skipped;
+
         if (_model.pause_state) {
             return;
         }
@@ -116,8 +120,8 @@ public class SplitRow : MonoBehaviour {
         GetComponent<Image>().sprite = _background;
         GetComponent<Image>().color = new Color(0.0f, 0.4f, 1.0f, 0.6f);
     }
-    public void split_out()
-    {
+    public void split_out(bool skipped = false) {
+        _skipped = skipped;
         if (_model.pause_state) {
             return;
         }

@@ -20,6 +20,7 @@ public class RunSummary : MonoBehaviour {
     private long _pb_time = 0;
     private long _gold_time = 0;
     private long _run_pb = 0;
+    private bool _skip = false;
 
     private void OnEnable()
     {
@@ -32,12 +33,15 @@ public class RunSummary : MonoBehaviour {
     private void run_start (long run_pb, Image last_split_thumb)
     {
         _run_pb = run_pb;
-        _final_split.sprite = last_split_thumb.sprite;
-        _final_split.preserveAspect = true;
+        if (_final_split){
+            _final_split.sprite = last_split_thumb.sprite;
+            _final_split.preserveAspect = true;
+        }
     }
 
-    private void split(string name, long split_time, long gold_time, long pb_time)
+    private void split(string name, long split_time, long gold_time, long pb_time, bool skip = false)
     {
+        _skip = skip;
         _split_name.text = name;
         _last_split_time = split_time;
         _gold_time = gold_time;
@@ -48,6 +52,7 @@ public class RunSummary : MonoBehaviour {
 
     private void reset(string split_name)
     {
+        _skip = false;
         _pb_comparison.fillAmount = 0;
         _run_progress.value = 0;
         _total_time_left.text = "-";
@@ -66,7 +71,7 @@ public class RunSummary : MonoBehaviour {
     private void Update() {
         if (_timer.state == Timer.TimeState.Running) {
             long ms = _timer.elapsed_ms - _last_split_time;
-            _glod_comparison.fillAmount = 1.0f - (float)ms / _gold_time;
+            _glod_comparison.fillAmount = _skip ? 0.0f : 1.0f - (float)ms / _gold_time;
 
             long pb_time_left = _pb_time - _timer.elapsed_ms;
             System.TimeSpan ts = System.TimeSpan.FromMilliseconds(pb_time_left);

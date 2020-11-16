@@ -8,6 +8,9 @@ using System.Timers;
 
 public class ImportExportSplits : MonoBehaviour
 {
+    public delegate void import_done_delegate (string splitname = null);
+    public static import_done_delegate on_import_done;
+
     [SerializeField] private FileBrowser _filepicker = null;
     public void on_click() {
         FileBrowser filepicker = Instantiate(_filepicker);
@@ -15,7 +18,6 @@ public class ImportExportSplits : MonoBehaviour
 
         string[] filters = {".lss"};
         filepicker.show((string path) => {
-            Debug.Log(path);
             create_splits_from_xml(path);
         }, filters);
     }
@@ -92,6 +94,7 @@ public class ImportExportSplits : MonoBehaviour
         string path = Application.persistentDataPath + "/" + id + "/splits/" + json_path;
 
         run.save(path);
+        on_import_done(json_path);
         
         //run.run.split_meta
     }

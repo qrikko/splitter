@@ -91,7 +91,6 @@ namespace TwitchAPI {
             if (request.isNetworkError) {
                 Debug.Log("Error: " + request.error);
             } else {
-                //Debug.Log("\nRecieved: " + request.downloadHandler.text);
                 _twitch_user_cache[login] = JsonConvert.DeserializeObject<TwitchUserModel>(request.downloadHandler.text).data[0];
 
                 callback(_twitch_user_cache[login]);

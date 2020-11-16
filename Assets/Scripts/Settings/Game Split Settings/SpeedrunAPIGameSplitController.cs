@@ -232,7 +232,6 @@ public class SpeedrunAPIGameSplitController : MonoBehaviour {
         }
 
         foreach (speedrun.SplitMeta s in _split_model.run.split_meta ) {
-            Debug.Log(s.name);
             Split split = Split.Instantiate(_split_row_prefab, _split_container.transform);
             split.model = s;
         }
@@ -273,7 +272,6 @@ public class SpeedrunAPIGameSplitController : MonoBehaviour {
         }
         
         populate_splits();
-
         load_splits();
     }
 
@@ -282,10 +280,25 @@ public class SpeedrunAPIGameSplitController : MonoBehaviour {
         _split_model.save(path);
     }
 
+    public void request_init(string splitname = null) {
+        if (splitname != null) {
+            PlayerPrefs.SetString(_id, splitname);
+        }
+        
+        var option = _saved_splits.options[0];
+        _saved_splits.options.Clear();
+        _saved_splits.options.Add(option);
+        populate_splits();
+        
+        load_splits();
+    }
+
     void OnEnable () {
         Split.on_glod_reset += request_save;
+        ImportExportSplits.on_import_done += request_init;
     }
     void OnDisable () {
         Split.on_glod_reset -= request_save;
+        ImportExportSplits.on_import_done -= request_init;
     }
 }

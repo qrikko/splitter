@@ -10,9 +10,7 @@ public class EnvMapAnimator : MonoBehaviour {
     private Material m_material;
     
 
-    void Awake()
-    {
-        //Debug.Log("Awake() on Script called.");
+    void Awake() {
         m_textMeshPro = GetComponent<TMP_Text>();
         m_material = m_textMeshPro.fontSharedMaterial;
     }

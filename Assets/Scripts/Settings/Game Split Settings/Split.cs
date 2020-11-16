@@ -54,7 +54,7 @@ public class Split : MonoBehaviour, ISelectHandler
 
         string[] filters = {".png", ".jpg", ".jpeg", ".bmp", ".tga", ".gif"};
         filepicker.show((string path) => {
-            Debug.Log(path);
+            thumb_selected(path);
         }, filters);
 
 //        FileBrowser imagepicker = Instantiate(_imagepicker);
