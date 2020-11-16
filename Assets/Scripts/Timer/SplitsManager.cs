@@ -78,10 +78,6 @@ public class SplitsManager : MonoBehaviour {
     }
 
     public void start_run() {
-        if (_animator != null) {
-            _animator.SetTrigger("start");
-        }
-
         _previous_diff = System.TimeSpan.Zero;
         speedrun.RunAttempt new_attempt = new speedrun.RunAttempt();
         new_attempt.attempt_index = _model.run.game_meta.attempts_count;
@@ -117,15 +113,22 @@ public class SplitsManager : MonoBehaviour {
         }
         _split_index = 0;
 
+        if (_timer.state == Timer.TimeState.Running) {
+            on_reset(rows[0].model.name);
+            on_run_end();
+        }
         _timer.reset();
-        on_reset(rows[0].model.name);
-        on_run_end();
     }
 
     private void restart_run() {
-        if (_animator != null) {
-            _animator.SetTrigger("stop");
+        if (_current_attempt == null || _timer.state == Timer.TimeState.Countdown) {
+            _pb_compare.fillAmount = 0;
+            reset();
+            return;
         }
+        // if (_animator != null) {
+        //     _animator.SetTrigger("stop");
+        // }
         _current_attempt.end_datetime = DateTime.Now.ToString("yyyyMMddTHH:mm.ss");
         _current_attempt.finished = false;
         _model.run.attempts.Add(_current_attempt);
@@ -178,7 +181,7 @@ public class SplitsManager : MonoBehaviour {
     }
 
     public void skip_split() {
-        if (_split_index+1 > _model.run.split_meta.Count) {
+        if (_split_index+1 > _model.run.split_meta.Count-1) {
             // can't skip if it is last split!
             return;
         }
@@ -368,16 +371,26 @@ public class SplitsManager : MonoBehaviour {
                     _view_mode = ViewMode.PB;
                     change_view_mode(_view_mode);
                     start_run();
+
                 }
-            } else {
+            } else if (_timer.state != Timer.TimeState.Countdown) {
                 split();
             }
         } else if(Input.GetKeyDown("[2]")) {
-            skip_split();
+            if(_timer.state == Timer.TimeState.Running) {
+                skip_split();
+            }
         } else if (Input.GetKeyDown("[3]")) {
-            restart_run();
+            if(_timer.state != Timer.TimeState.Stopped) {
+                restart_run();
+                if (_animator != null) {
+                    _animator.SetTrigger("stop");
+                }
+            }
         } else if (Input.GetKeyDown("[8]")) {
-            unsplit();
+            if(_timer.state == Timer.TimeState.Running) {
+                unsplit();
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.N)) {
@@ -398,15 +411,24 @@ public class SplitsManager : MonoBehaviour {
         final_split_image(img);
     }
 
+    private void run_start() {
+        if (_animator != null) {
+            _animator.SetTrigger("start");
+        }
+    }
     void OnDisable() {
         SplitRow i = transform.GetChild(transform.childCount -1).GetComponent<SplitRow>();
         i.thumb_updated -= set_final_split;
+
+        Timer.on_run_start -= run_start;
     }
 
     void OnEnable() {
         SplitRow i = transform.GetChild(transform.childCount -1).GetComponent<SplitRow>();
         i.thumb_updated += set_final_split;
         on_run_end();
+
+        Timer.on_run_start += run_start;
     }
 
     void Awake() {

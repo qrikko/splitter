@@ -18,6 +18,8 @@ public class SplitRow : MonoBehaviour {
     [SerializeField] private TMP_Text _time = null;
     [SerializeField] private Image _bg_fill = null;
 
+    private Sprite _initial_background;
+
     private bool _limerick_mode = false;
     public bool limerick_mode {
         set {
@@ -102,6 +104,7 @@ public class SplitRow : MonoBehaviour {
         _bg_fill.color = _empty_color;
         _bg_fill.CrossFadeAlpha(1.0f, 0.0f, true);
         _bg_fill.fillAmount = 0;
+        GetComponent<Image>().sprite = _initial_background;
     }
 
     public void split_in() {
@@ -154,6 +157,7 @@ public class SplitRow : MonoBehaviour {
                     if (pb.attempt_index == _model.pb_index) {
                         if (_model.gold >= pb.split_duration) {
                             GetComponent<Image>().color = new Color(1, 1, 0, 0.2156863f);
+                            GetComponent<Image>().fillCenter = true;
                         }
                         break;
                     }
@@ -191,5 +195,6 @@ public class SplitRow : MonoBehaviour {
     {
         _initial_color = GetComponent<Image>().color;
         _empty_color = _bg_fill.color;
+        _initial_background = GetComponent<Image>().sprite;
     }
 }

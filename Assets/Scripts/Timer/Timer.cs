@@ -9,7 +9,8 @@ public class Timer : MonoBehaviour
     public enum TimeState {
         Stopped,
         Paused,
-        Running
+        Running,
+        Countdown
     };
     private TimeState _state = TimeState.Stopped;
     public TimeState state {
@@ -34,6 +35,9 @@ public class Timer : MonoBehaviour
     private Stopwatch _offset_stopwatch = new Stopwatch();
 
     private VertexGradient _initial_gradient;
+
+    public delegate void run_start_delegate();
+    public static run_start_delegate on_run_start;
 
     public void end_run(long pb) {
         _state = TimeState.Stopped;
@@ -113,12 +117,16 @@ public class Timer : MonoBehaviour
         _stopwatch.Stop();
         _stopwatch.Reset();
         _text.text = _initial_text;
+
+        _offset_stopwatch.Stop();
+        _offset_stopwatch.Reset();        
     }
 
     public void new_run()
     {
         _offset_stopwatch.Reset();
         _offset_stopwatch.Start();
+        _state = TimeState.Countdown;
         //_stopwatch.Start();
     }
 
@@ -159,6 +167,7 @@ public class Timer : MonoBehaviour
                 _offset_stopwatch.Reset();
                 _stopwatch.Start();
                 _state = TimeState.Running;
+                on_run_start();
                 return;
             }
             format_time(_offset_stopwatch.Elapsed.Subtract(ts));
