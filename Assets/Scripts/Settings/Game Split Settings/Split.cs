@@ -15,6 +15,8 @@ public class Split : MonoBehaviour, ISelectHandler
 
     public delegate void select_delegate(speedrun.SplitMeta model);
     public static select_delegate on_select;
+    public delegate void glod_reset_delegate();
+    public static glod_reset_delegate on_glod_reset;
 
     private string _thumb_path;
 
@@ -79,5 +81,11 @@ public class Split : MonoBehaviour, ISelectHandler
 
     public void name_changed(string name) {
         _model.name = name;
+    }
+
+    public void reset_glod() {
+        _best_segment.text = "";
+        _model.gold = 0;
+        on_glod_reset();
     }
 }

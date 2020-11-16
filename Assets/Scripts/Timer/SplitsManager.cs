@@ -361,7 +361,7 @@ public class SplitsManager : MonoBehaviour {
         if (Input.GetKeyDown("[1]")) {
             if (_timer.state == Timer.TimeState.Stopped) {
                 if (_timer.elapsed_ms > 0) {
-                    reset();
+                   // reset();
                 } else {
                     // we force the view back to PB when we start a run, at the moment at least I just want the
                     // details viewable when not in a run

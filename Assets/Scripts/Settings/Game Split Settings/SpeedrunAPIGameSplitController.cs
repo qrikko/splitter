@@ -276,4 +276,16 @@ public class SpeedrunAPIGameSplitController : MonoBehaviour {
 
         load_splits();
     }
+
+    public void request_save() {
+        string path = Application.persistentDataPath + "/" + _id + "/splits/" + _split_name.text + ".json";
+        _split_model.save(path);
+    }
+
+    void OnEnable () {
+        Split.on_glod_reset += request_save;
+    }
+    void OnDisable () {
+        Split.on_glod_reset -= request_save;
+    }
 }
