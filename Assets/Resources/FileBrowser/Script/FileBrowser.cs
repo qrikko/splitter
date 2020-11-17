@@ -24,11 +24,9 @@ public class FileBrowser : MonoBehaviour
     }
 
     void OnEnable() {
-        Debug.Log("PrintOnEnable: script was enabled");
         FileBrowserRow.file_clicked += selected_image;
     }
     void OnDisable() {
-        Debug.Log("PrintOnEnable: script was DISABLED");
         FileBrowserRow.file_clicked -= selected_image;
     }
     
