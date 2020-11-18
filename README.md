@@ -11,7 +11,7 @@ Speedrun split tool, right now it has features to support actual use in speedrun
   - speedrunslive.com
 
 <p>
-  <img src="https://raw.githubusercontent.com/qrikko/splitter/master/preview-mockup.png" alt="Mockup"/>
+  <img src="https://raw.githubusercontent.com/qrikko/splitter/master/promo/preview-mockup.png" alt="Mockup"/>
 </p>
 
 # Features
