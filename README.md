@@ -10,9 +10,11 @@ Speedrun split tool, right now it has features to support actual use in speedrun
   - splits.io
   - speedrunslive.com
 
-<p>
+<table><tr style="border: none;"><td style="border: none;">
   <img src="https://raw.githubusercontent.com/qrikko/splitter/master/promo/preview-mockup.png" alt="Mockup"/>
-</p>
+    </td><td>
+  <img src="https://raw.githubusercontent.com/qrikko/splitter/master/promo/settings-mockup.png" alt="Mockup"/>
+    </td></tr></table>
 
 # Features
 - *speedrun.com integration* - Most information of runs are fetched from speedrun.com
