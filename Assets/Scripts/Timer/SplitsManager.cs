@@ -113,8 +113,8 @@ public class SplitsManager : MonoBehaviour {
         }
         _split_index = 0;
 
-        if (_timer.state == Timer.TimeState.Running) {
-            on_reset(rows[0].model.name);
+        on_reset(rows[0].model.name);
+        if (_timer.state == Timer.TimeState.Running) {            
             on_run_end();
         }
         _timer.reset();

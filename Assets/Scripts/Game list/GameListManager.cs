@@ -13,6 +13,7 @@ public class GameListManager : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
+        Screen.fullScreenMode = FullScreenMode.ExclusiveFullScreen;
         Screen.SetResolution(365,625, false);
         _username.text = PlayerPrefs.GetString("username");
         StartCoroutine(get_platforms());
