@@ -1,4 +1,4 @@
-﻿<h1> <img src="https://raw.githubusercontent.com/qrikko/splitter/master/promo/splitter_logo_mid.png" alt="LiveSplit" width="200" align="top"/></h1>
+﻿<h1> <img src="https://raw.githubusercontent.com/qrikko/splitter/master/promo/splitter_logo.png" alt="LiveSplit" width="200" align="top"/></h1>
 <!--img src="https://raw.githubusercontent.com/qrikko/splitter/master/promo/splitter_logo.png" alt="Mockup"/-->
 Speedrun split tool, right now it has features to support actual use in speedruns, but there is still a lot of features comming.
     
