@@ -55,7 +55,7 @@ public class FileView : MonoBehaviour
         FileInfo[] files = di.GetFiles();
         
         foreach (FileInfo file in files) {
-            if (_show_hidden == false && file.Name[0] == '.') {
+            if (_show_hidden == false && file.Attributes.HasFlag(FileAttributes.Hidden)) {
                 continue;
             }
             if (_extensions.Contains(file.Extension) || _extensions.Count == 0) {
@@ -81,7 +81,7 @@ public class FileView : MonoBehaviour
         _current_folder = new DirectoryInfo(path);
 
         foreach (DirectoryInfo folder in _current_folder.GetDirectories()) {
-            if (_show_hidden == false && folder.Name[0] == '.') {
+            if (_show_hidden == false && folder.Attributes.HasFlag(FileAttributes.Hidden)) {
                 continue;
             }
             FolderBrowserRow row = GameObject.Instantiate(_folder_row_prefab, _folder_container.transform);
