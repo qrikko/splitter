@@ -14,6 +14,17 @@ public class FileView : MonoBehaviour
 
     // make sure this is not the default, it should be provided for the image case..
     private List<string> _extensions = new List<string>(){ ".png", ".jpg", ".jpeg", ".bmp", ".tga", ".gif"};
+
+    private bool _show_hidden = false;
+    public bool show_hidden {
+        set {
+            _show_hidden = value; 
+            if (_current_folder != null) {
+                list_folder(_current_folder.FullName);
+            }
+        }
+    }
+
     //private List<string> _extensions = new List<string>();
     public void set_filters (string[] filters) {
         _extensions.Clear();
@@ -44,6 +55,9 @@ public class FileView : MonoBehaviour
         FileInfo[] files = di.GetFiles();
         
         foreach (FileInfo file in files) {
+            if (_show_hidden == false && file.Name[0] == '.') {
+                continue;
+            }
             if (_extensions.Contains(file.Extension) || _extensions.Count == 0) {
                 FileBrowserRow row = GameObject.Instantiate(_file_row_prefab, _file_container.transform);
                 row.info = file;
@@ -67,6 +81,9 @@ public class FileView : MonoBehaviour
         _current_folder = new DirectoryInfo(path);
 
         foreach (DirectoryInfo folder in _current_folder.GetDirectories()) {
+            if (_show_hidden == false && folder.Name[0] == '.') {
+                continue;
+            }
             FolderBrowserRow row = GameObject.Instantiate(_folder_row_prefab, _folder_container.transform);
             row.info = folder;
         }
