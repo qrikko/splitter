@@ -50,6 +50,7 @@ public class SpeedrunAPIGameSplitController : MonoBehaviour {
 
     public void update_start_time()
     {
+        //System.TimeSpan ts = System.TimeSpan.Parse(_start_time.text);
         _split_model.run.game_meta.start_offset = _start_time.text;
     }
 
