@@ -8,6 +8,7 @@ public class ResolutionEditor : Editor {
     public override void OnInspectorGUI() {
         Resolution resolution = (Resolution)target;
 
+        resolution._tween = EditorGUILayout.Toggle("Show Tweened", resolution._tween);
         resolution._type = (Resolution.WindowType) EditorGUILayout.EnumPopup(resolution._type);
 
         GUI.enabled = false;

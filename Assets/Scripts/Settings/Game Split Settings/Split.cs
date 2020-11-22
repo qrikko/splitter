@@ -51,7 +51,7 @@ public class Split : MonoBehaviour, ISelectHandler
             tex.LoadImage(fileData); //..this will auto-resize the texture dimensions.
 
              _thumb.sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(.5f, .5f));
-            _thumb.preserveAspect = true;            
+            _thumb.preserveAspect = true;
         }*/        
     }
 
