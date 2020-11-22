@@ -20,28 +20,37 @@ public class Resolution : MonoBehaviour {
 
     IEnumerator tween(int w, int h) {
         RectTransform _tween_transform = GetComponent<RectTransform>();
+        float w_curr = w;
+        float h_curr = h;
         while(w <= _width && h <= _height){
-            yield return new WaitForSeconds(2.2f);
+            yield return new WaitForEndOfFrame();
             
-            w = System.Math.Max(w+_tween_speed, _width);
-            h = System.Math.Max(h+_tween_speed, _height);
-            Screen.SetResolution(
-                w,
-                h,
-                false
-            );
-            _tween_transform.sizeDelta = new Vector2(w-365,h);
+            w_curr = System.Math.Max(w_curr+_tween_speed*Time.deltaTime, _width);
+            h_curr = System.Math.Max(h_curr+_tween_speed*Time.deltaTime, _height);
+            w = (int)w_curr;
+            h = (int)h_curr;
+            if (w_curr > w+1 || h_curr > h+1) {
+                Screen.SetResolution(
+                    w,
+                    h,
+                    false
+                );
+            }
+            _tween_transform.sizeDelta = new Vector2(w_curr-365,h_curr);
         }
     }
 
     void OnEnable() {
+        // I wanted to animate the change, but it doesn't work so I'll keep the code if I want to give it another go..
+        /*
         if (_tween) {
             int w = Screen.width;
             int h = Screen.height;
             StartCoroutine(tween(w, h));
         } else {
+        */
             Screen.SetResolution(_width, _height, false);
-        }
+        //}
     }
 
     void OnDisable() {

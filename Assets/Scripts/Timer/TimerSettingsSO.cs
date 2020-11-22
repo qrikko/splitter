@@ -8,19 +8,20 @@ using System.IO;
 public struct SplitViewBackground {
     
     public Color color;    
-    private string _image_src;
-    public string image_src { get { return _image_src;} set {_image_src = value;}}
+    public string image_src;
+    public bool keep_ratio;
+    
 }
 
 [CreateAssetMenu(fileName = "Settings", menuName = "Settings/Timer Settings", order = 2)]
-public class TimerSettingsSO : ScriptableObject
-{
+public class TimerSettingsSO : ScriptableObject {
+    [SerializeField] private SplitViewBackground _splitter_background;
+    [SerializeField] private SplitViewBackground _split_view_bg;
+
     public delegate void BGColorChangeDelegate();
     public static BGColorChangeDelegate on_bg_color_change;
     public delegate void BGImageChangeDelegate();
     public static BGImageChangeDelegate on_bg_image_change;
-
-    public SplitViewBackground _split_view_bg;
 
     public Color background_color {
         get { return _split_view_bg.color;}
