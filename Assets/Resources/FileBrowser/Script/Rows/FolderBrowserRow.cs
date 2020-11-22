@@ -14,6 +14,10 @@ public class FolderBrowserRow : AbstractBrowserRow
             _filename.text = _info.Name;
         }
     }
+    public void set_previous (DirectoryInfo prev) {
+        _info = prev;
+        _filename.text = "..";
+    }
 
     public delegate void folder_clicked_action(string path);
     public static event folder_clicked_action folder_clicked; 

@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using System.IO;
 
 public class Split : MonoBehaviour, ISelectHandler
 {
@@ -42,7 +43,16 @@ public class Split : MonoBehaviour, ISelectHandler
     public void thumb_selected(string path) {
         _model.thumb_path = path;
         StartCoroutine(fetch_thumb());
-        
+
+        /* Could probably do this instead:
+        if (File.Exists(path)) {
+            byte[] fileData = File.ReadAllBytes(path);
+            Texture2D tex = new Texture2D(2, 2);
+            tex.LoadImage(fileData); //..this will auto-resize the texture dimensions.
+
+             _thumb.sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(.5f, .5f));
+            _thumb.preserveAspect = true;            
+        }*/        
     }
 
     public void select_thumb() {

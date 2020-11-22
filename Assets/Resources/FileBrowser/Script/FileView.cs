@@ -77,9 +77,10 @@ public class FileView : MonoBehaviour
         }
 
         //_up_button.info = _current_folder.Parent;
-        
-        _current_folder = new DirectoryInfo(path);
+        FolderBrowserRow prev_row = GameObject.Instantiate(_folder_row_prefab, _folder_container.transform);
+        prev_row.set_previous(new DirectoryInfo(Path.GetDirectoryName(path)));
 
+        _current_folder = new DirectoryInfo(path);        
         foreach (DirectoryInfo folder in _current_folder.GetDirectories()) {
             if (_show_hidden == false && folder.Attributes.HasFlag(FileAttributes.Hidden)) {
                 continue;

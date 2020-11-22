@@ -21,6 +21,9 @@ EditorBuildSettings:
     path: Assets/Scenes/Split Settings.unity
     guid: 9695326d01943e274a5e75d43eb0bc9f
   - enabled: 1
+    path: Assets/Scenes/Timer Settings.unity
+    guid: be9db8b98c0abea1a992c97f271052bf
+  - enabled: 1
     path: Assets/Resources/FileBrowser/FileBrowser.unity
     guid: 4173b7fd8fa641a47a41bb0c231521be
   - enabled: 1
