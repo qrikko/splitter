@@ -9,6 +9,7 @@ public class ImageButton : MonoBehaviour {
     private Image _image;
 
     [SerializeField] private FileBrowser _filepicker;
+    [SerializeField] private Image _bg;
 
     public void on_click() {
         FileBrowser filepicker = Instantiate(_filepicker);
@@ -18,6 +19,8 @@ public class ImageButton : MonoBehaviour {
         filepicker.show((string path) => {
             if (File.Exists(path)) {
                 _settings.background_image_src = path;
+                _bg.sprite = _settings.background_image;
+                _image.sprite = _settings.background_image;
             }
             
         }, filters);
@@ -25,13 +28,6 @@ public class ImageButton : MonoBehaviour {
 
     private void update_sprite() {
         _image.sprite = _settings.background_image;
-    }
-
-    void OnEnable() {
-        TimerSettingsSO.on_bg_image_change += update_sprite;
-    }
-    void OnDisable() {
-        TimerSettingsSO.on_bg_image_change -= update_sprite;
     }
 
     void Start() {

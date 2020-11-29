@@ -18,14 +18,9 @@ public class TimerSettingsSO : ScriptableObject {
     [SerializeField] private SplitViewBackground _splitter_background;
     [SerializeField] private SplitViewBackground _split_view_bg;
 
-    public delegate void BGColorChangeDelegate();
-    public static BGColorChangeDelegate on_bg_color_change;
-    public delegate void BGImageChangeDelegate();
-    public static BGImageChangeDelegate on_bg_image_change;
-
     public Color background_color {
         get { return _split_view_bg.color;}
-        set {_split_view_bg.color = value; on_bg_color_change();}
+        set {_split_view_bg.color = value; }
     }
 
     public Sprite background_image {
@@ -44,8 +39,7 @@ public class TimerSettingsSO : ScriptableObject {
 
     public string background_image_src {
         get { return _split_view_bg.image_src; }
-        set { _split_view_bg.image_src = value; on_bg_image_change();}
+        set { _split_view_bg.image_src = value;}
     }
-
     
 }

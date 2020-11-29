@@ -12,6 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fad00d72d6cf3e42e9ea0fd01f1701ba, type: 3}
   m_Name: DefaultTimerSettings
   m_EditorClassIdentifier: 
+  _splitter_background:
+    color: {r: 1, g: 1, b: 1, a: 1}
+    image_src: /home/qrikko/Pictures/wallpapers/484836.jpg
+    keep_ratio: 1
   _split_view_bg:
-    color: {r: 0.5860985, g: 0.35754246, b: 0.35754246, a: 1}
-    image: {fileID: 21300000, guid: 3a0edc21087a9efbcb6c8328533ade0f, type: 3}
+    color: {r: 1, g: 1, b: 1, a: 1}
+    image_src: 
+    keep_ratio: 0

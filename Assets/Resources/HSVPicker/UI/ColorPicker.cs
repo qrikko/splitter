@@ -1,10 +1,12 @@
 ﻿using Assets.HSVPicker;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ColorPicker : MonoBehaviour
 {
-    public void ToggleVisible() {
+    public void ToggleVisible(Image c) {
         gameObject.SetActive(!gameObject.activeSelf);
+        CurrentColor = c.color;
     }
 
     private float _hue = 0;
