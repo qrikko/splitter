@@ -9,7 +9,7 @@ public class SelectNameForSplit : MonoBehaviour
     [SerializeField] TMP_InputField _filename = null;
     public void done() {
         string id = PlayerPrefs.GetString("active_game");
-        string path = Application.persistentDataPath + "/" + id + "/splits/" + _filename.text + ".json";
+        string path = Application.persistentDataPath + "/" + id + "/splits/" + _filename.text + "/splits.json";
         PlayerPrefs.SetString(id, _filename.text);
         SceneManager.UnloadSceneAsync("Enter splits name");
     }

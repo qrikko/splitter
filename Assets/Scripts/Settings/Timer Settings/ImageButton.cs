@@ -5,33 +5,38 @@ using UnityEngine.UI;
 using System.IO;
 
 public class ImageButton : MonoBehaviour {
-    [SerializeField] private TimerSettingsSO _settings;
     private Image _image;
 
-    [SerializeField] private FileBrowser _filepicker;
-    [SerializeField] private Image _bg;
+    [SerializeField] private FileBrowser _filepicker_prefab;
+    [SerializeField] private GradientSettingsManager _settings_manager;
 
     public void on_click() {
-        FileBrowser filepicker = Instantiate(_filepicker);
+        FileBrowser filepicker = Instantiate(_filepicker_prefab);
         filepicker.gameObject.SetActive(true);
 
         string[] filters = {".png", ".jpg", ".jpeg", ".bmp", ".tga", ".gif"};
         filepicker.show((string path) => {
             if (File.Exists(path)) {
-                _settings.background_image_src = path;
-                _bg.sprite = _settings.background_image;
-                _image.sprite = _settings.background_image;
+                byte[] fileData = File.ReadAllBytes(path);
+                Texture2D tex = new Texture2D(2, 2);
+                tex.LoadImage(fileData); //..this will auto-resize the texture dimensions.
+
+                _image.sprite =  Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(.5f, .5f));
             }
-            
+            _settings_manager.image_path = path;
         }, filters);
     }
 
     private void update_sprite() {
-        _image.sprite = _settings.background_image;
+        //_image.sprite = _settings.background_image;
     }
 
-    void Start() {
+    void OnEnable() {
+        _image.sprite = _settings_manager.settings.background_image;
+    }
+
+    void Awake() {
         _image = GetComponent<Image>();
-        _image.sprite = _settings.background_image;
+        //_image.sprite = _settings.background_image;
     }
 }

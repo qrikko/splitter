@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 public class ColorManager : MonoBehaviour
 {
-    [SerializeField] Image _target;
     [SerializeField] GameObject[] _panels;
 
     private int _current_id = 0;

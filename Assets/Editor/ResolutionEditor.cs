@@ -15,7 +15,7 @@ public class ResolutionEditor : Editor {
         switch(resolution._type) {
             case Resolution.WindowType.Tall:
                 resolution._width = 365;
-                resolution._height = 625;
+                resolution._height = 700;
             break;
             case Resolution.WindowType.Wide:
             case Resolution.WindowType.Settings:

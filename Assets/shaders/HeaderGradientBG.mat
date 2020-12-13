@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: gradientUI
+  m_Name: HeaderGradientBG
   m_Shader: {fileID: 4800000, guid: 3070316dca34fecc69d6526ed77a91ef, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
@@ -86,12 +86,12 @@ Material:
     - _UseUIAlphaClip: 0
     - _ZWrite: 1
     m_Colors:
-    - _BottomLeftColor: {r: 1, g: 0.8579823, b: 0.8579823, a: 1}
-    - _BottomRightColor: {r: 1, g: 0.8579823, b: 0.8579823, a: 1}
+    - _BottomLeftColor: {r: 1, g: 1, b: 1, a: 0}
+    - _BottomRightColor: {r: 1, g: 1, b: 1, a: 0}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _Flip: {r: 1, g: 1, b: 1, a: 1}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
-    - _TopLeftColor: {r: 1, g: 0.8579823, b: 0.8579823, a: 1}
-    - _TopRightColor: {r: 1, g: 0.8579823, b: 0.8579823, a: 1}
+    - _TopLeftColor: {r: 1, g: 1, b: 1, a: 0}
+    - _TopRightColor: {r: 1, g: 1, b: 1, a: 0}
   m_BuildTextureStacks: []

@@ -39,6 +39,9 @@ public class Resolution : MonoBehaviour {
             _tween_transform.sizeDelta = new Vector2(w_curr-365,h_curr);
         }
     }
+    public void trigger() {
+        Screen.SetResolution(_width, _height, false);
+    }
 
     void OnEnable() {
         // I wanted to animate the change, but it doesn't work so I'll keep the code if I want to give it another go..

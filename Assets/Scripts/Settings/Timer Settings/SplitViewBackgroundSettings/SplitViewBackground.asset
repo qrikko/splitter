@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13073598d74896f4087dba468afaf8c4, type: 3}
+  m_Name: SplitViewBackground
+  m_EditorClassIdentifier: 
+  gradient:
+    tl: {r: 1, g: 1, b: 1, a: 0}
+    tr: {r: 1, g: 1, b: 1, a: 0}
+    bl: {r: 1, g: 1, b: 1, a: 0}
+    br: {r: 1, g: 1, b: 1, a: 0}
+  color: {r: 1, g: 1, b: 1, a: 0}
+  image_src: 
+  keep_ratio: 0

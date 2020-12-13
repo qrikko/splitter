@@ -51,7 +51,8 @@ public class GameView : MonoBehaviour
 
     public void start_game() {
         PlayerPrefs.SetString("active_game", _model.data.id);
-        string path = Application.persistentDataPath + "/" + _model.data.id + "/splits/split.json";
+        string path = PlayerPrefs.GetString(_model.data.id);
+        //string path = Application.persistentDataPath + "/" + _model.data.id + "/splits/" + "/splits.json";
 
         if (File.Exists(path)){
             SceneManager.LoadScene("Timer");
@@ -63,7 +64,7 @@ public class GameView : MonoBehaviour
 
     public void start_settings() {
         PlayerPrefs.SetString("active_game", _model.data.id);
-        string path = Application.persistentDataPath + "/" + _model.data.id + "/splits/split.json";
+        string path = Application.persistentDataPath + "/" + _model.data.id + "/splits" + "split.json";
 
         SceneManager.LoadScene("Timer Settings");
         save_game_model();

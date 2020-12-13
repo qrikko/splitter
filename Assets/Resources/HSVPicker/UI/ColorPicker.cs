@@ -1,8 +1,9 @@
 ﻿using Assets.HSVPicker;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
-public class ColorPicker : MonoBehaviour
+public class ColorPicker : MonoBehaviour//, IEndDragHandler
 {
     public void ToggleVisible(Image c) {
         gameObject.SetActive(!gameObject.activeSelf);
@@ -19,12 +20,19 @@ public class ColorPicker : MonoBehaviour
 
     private float _alpha = 1;
 
+//  public void OnEndDrag(PointerEventData data) {
+//       SendSelectEvent();
+//    }
+
+
     [Header("Setup")]
     public ColorPickerSetup Setup;
 
     [Header("Event")]
     public ColorChangedEvent onValueChanged = new ColorChangedEvent();
     public HSVChangedEvent onHSVChanged = new HSVChangedEvent();
+    public ColorSelectedEvent onValueSelected = new ColorSelectedEvent();
+    public HSVSelectedEvent onHSVSelected = new HSVSelectedEvent();
 
     public Color CurrentColor
     {
@@ -218,6 +226,11 @@ public class ColorPicker : MonoBehaviour
         onHSVChanged.Invoke(_hue, _saturation, _brightness);
     }
 
+    private void SendSelectEvent() {
+        onValueSelected.Invoke();
+        onHSVSelected.Invoke(_hue, _saturation, _brightness);
+    }
+
     public void AssignColor(ColorValues type, float value)
     {
         switch (type)
@@ -313,5 +326,11 @@ public class ColorPicker : MonoBehaviour
         Setup.ColorPreview.Toggle(setupShowHeader != ColorPickerSetup.ColorHeaderShowing.ShowColorCode);
         Setup.ColorCode.Toggle(setupShowHeader != ColorPickerSetup.ColorHeaderShowing.ShowColor);
 
+    }
+
+    void Update() {
+        if (Input.GetMouseButtonUp(0)) {
+            SendSelectEvent();
+        }
     }
 }
