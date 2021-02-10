@@ -1,0 +1,210 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91b1b5b82607bee7fbcd4d203690ae9f, type: 3}
+  m_Name: TimerFontSettings
+  m_EditorClassIdentifier: 
+  _fonts:
+  - Bitstream Charter
+  - Cantarell
+  - Cantarell Bold
+  - Carlito
+  - Carlito Bold
+  - Carlito Italic
+  - Carlito Bold Italic
+  - Century Schoolbook L
+  - Courier
+  - Courier 10 Pitch
+  - DejaVu Math TeX Gyre
+  - DejaVu Sans
+  - DejaVu Sans Bold
+  - DejaVu Sans Italic
+  - DejaVu Sans Bold Italic
+  - DejaVu Sans Mono
+  - DejaVu Sans Mono Bold
+  - DejaVu Sans Mono Italic
+  - DejaVu Sans Mono Bold Italic
+  - DejaVu Serif
+  - DejaVu Serif Bold
+  - DejaVu Serif Italic
+  - DejaVu Serif Bold Italic
+  - Dingbats
+  - Droid Arabic Kufi
+  - Droid Arabic Kufi Bold
+  - Droid Arabic Naskh
+  - Droid Arabic Naskh Bold
+  - Droid Naskh Shift Alt
+  - Droid Sans
+  - Droid Sans Bold
+  - Droid Sans Armenian
+  - Droid Sans Devanagari
+  - Droid Sans Ethiopic
+  - Droid Sans Ethiopic Bold
+  - Droid Sans Fallback
+  - Droid Sans Georgian
+  - Droid Sans Hebrew
+  - Droid Sans Hebrew Bold
+  - Droid Sans Japanese
+  - Droid Sans Mono
+  - Droid Sans Tamil
+  - Droid Sans Tamil Bold
+  - Droid Sans Thai
+  - Droid Serif
+  - Droid Serif Bold
+  - Droid Serif Italic
+  - Droid Serif Bold Italic
+  - East Syriac Adiabene
+  - East Syriac Ctesiphon
+  - Estrangelo Antioch
+  - Estrangelo Edessa
+  - Estrangelo Midyat
+  - Estrangelo Nisibin
+  - Estrangelo Nisibin Outline
+  - Estrangelo Quenneshrin
+  - Estrangelo Talada
+  - Estrangelo TurAbdin
+  - Goha-Tibeb Zemen
+  - Hack
+  - Hack Bold
+  - Hack Italic
+  - Hack Bold Italic
+  - Latin Modern Mono
+  - Latin Modern Mono Italic
+  - Latin Modern Mono Caps
+  - Latin Modern Mono Caps Italic
+  - Latin Modern Mono Light
+  - Latin Modern Mono Light Bold
+  - Latin Modern Mono Light Italic
+  - Latin Modern Mono Light Bold Italic
+  - Latin Modern Mono Light Cond
+  - Latin Modern Mono Light Cond Italic
+  - Latin Modern Mono Prop
+  - Latin Modern Mono Prop Italic
+  - Latin Modern Mono Prop Light
+  - Latin Modern Mono Prop Light Bold
+  - Latin Modern Mono Prop Light Italic
+  - Latin Modern Mono Prop Light Bold Italic
+  - Latin Modern Mono Slanted
+  - Latin Modern Roman
+  - Latin Modern Roman Bold
+  - Latin Modern Roman Italic
+  - Latin Modern Roman Bold Italic
+  - Latin Modern Roman Caps
+  - Latin Modern Roman Caps Italic
+  - Latin Modern Roman Demi
+  - Latin Modern Roman Demi Italic
+  - Latin Modern Roman Dunhill
+  - Latin Modern Roman Dunhill Italic
+  - Latin Modern Roman Slanted
+  - Latin Modern Roman Slanted Bold
+  - Latin Modern Roman Unslanted
+  - Latin Modern Sans
+  - Latin Modern Sans Bold
+  - Latin Modern Sans Italic
+  - Latin Modern Sans Bold Italic
+  - Latin Modern Sans Demi Cond
+  - Latin Modern Sans Demi Cond Italic
+  - Latin Modern Sans Quotation
+  - Latin Modern Sans Quotation Bold
+  - Latin Modern Sans Quotation Italic
+  - Latin Modern Sans Quotation Bold Italic
+  - Liberation Mono
+  - Liberation Mono Bold
+  - Liberation Mono Italic
+  - Liberation Mono Bold Italic
+  - Liberation Sans
+  - Liberation Sans Bold
+  - Liberation Sans Italic
+  - Liberation Sans Bold Italic
+  - Liberation Serif
+  - Liberation Serif Bold
+  - Liberation Serif Italic
+  - Liberation Serif Bold Italic
+  - Luxi Mono
+  - Luxi Mono Bold
+  - Luxi Mono Italic
+  - Luxi Mono Bold Italic
+  - Luxi Sans
+  - Luxi Sans Bold
+  - Luxi Sans Italic
+  - Luxi Sans Bold Italic
+  - Luxi Serif
+  - Luxi Serif Bold
+  - Luxi Serif Italic
+  - Luxi Serif Bold Italic
+  - Nimbus Mono L
+  - Nimbus Roman No9 L
+  - Nimbus Sans L
+  - Noto Sans
+  - Noto Sans Bold
+  - Noto Sans Italic
+  - Noto Sans Bold Italic
+  - Noto Sans JP
+  - Noto Sans JP Bold
+  - Noto Sans KR
+  - Noto Sans KR Bold
+  - Noto Sans SC
+  - Noto Sans SC Bold
+  - Noto Sans TC
+  - Noto Sans TC Bold
+  - Open Sans
+  - Open Sans Bold
+  - Open Sans Italic
+  - Open Sans Bold Italic
+  - Open Sans Condensed
+  - Open Sans Condensed Bold
+  - Open Sans Condensed Italic
+  - Raleway
+  - Raleway Bold
+  - Raleway Italic
+  - Raleway Bold Italic
+  - Roboto
+  - Roboto Bold
+  - Roboto Italic
+  - Roboto Bold Italic
+  - Roboto Condensed
+  - Roboto Condensed Bold
+  - Roboto Condensed Italic
+  - Roboto Condensed Bold Italic
+  - STIXGeneral
+  - STIXGeneral Bold
+  - STIXGeneral Italic
+  - STIXGeneral Bold Italic
+  - Serto Batnan
+  - Serto Batnan Bold
+  - Serto Jerusalem
+  - Serto Jerusalem Bold
+  - Serto Jerusalem Italic
+  - Serto Jerusalem Outline
+  - Serto Kharput
+  - Serto Malankara
+  - Serto Mardin
+  - Serto Mardin Bold
+  - Serto Urhoy
+  - Serto Urhoy Bold
+  - Source Code Pro
+  - Source Code Pro Bold
+  - Source Code Pro Italic
+  - Source Code Pro Bold Italic
+  - Source Sans Pro
+  - Source Sans Pro Bold
+  - Source Sans Pro Italic
+  - Source Sans Pro Bold Italic
+  - Source Serif Pro
+  - Source Serif Pro Bold
+  - Source Serif Pro Italic
+  - Source Serif Pro Bold Italic
+  - Standard Symbols L
+  - URW Bookman L
+  - URW Chancery L
+  - URW Gothic L
+  - URW Palladio L
+  - Utopia
