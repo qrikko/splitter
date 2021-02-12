@@ -86,11 +86,11 @@ Material:
     - _UseUIAlphaClip: 0
     - _ZWrite: 1
     m_Colors:
-    - _BottomLeftColor: {r: 0.98355913, g: 0.08301749, b: 0.08301749, a: 1}
+    - _BottomLeftColor: {r: 1, g: 0, b: 0, a: 1}
     - _BottomRightColor: {r: 0, g: 0.31206453, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _Flip: {r: 1, g: 1, b: 1, a: 1}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
-    - _TopLeftColor: {r: 0.98355913, g: 0.08301749, b: 0.08301749, a: 1}
+    - _TopLeftColor: {r: 1, g: 0, b: 0, a: 1}
     - _TopRightColor: {r: 0, g: 0.31206453, b: 1, a: 1}
