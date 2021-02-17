@@ -16,8 +16,71 @@ public class GameView : MonoBehaviour
     [SerializeField] private Image _thumb = null;
     [SerializeField] private TMP_Text _title = null;
 
-    protected speedrun.GameModel _model;
+    public string title {
+        get { return _title.text; }
+        set { _title.text = value; }
+    }
 
+//    protected speedrun.GameModel _model;
+    // replace with:
+    protected GenericGameModel _model;
+
+    // public void start_game() {
+    //     PlayerPrefs.SetString("active_game", _model.data.id);
+    //     string path = PlayerPrefs.GetString(_model.data.id);
+    //     //string path = Application.persistentDataPath + "/" + _model.data.id + "/splits/" + "/splits.json";
+
+    //     if (File.Exists(path)){
+    //         SceneManager.LoadScene("Timer");
+    //     } else {
+    //         SceneManager.LoadScene("Timer Settings");
+    //     }
+    //     save_game_model();
+    // }
+    // Replace with:
+    public void start_game() {
+        PlayerPrefs.SetInt("active_game", _model.guid);
+        string path = PlayerPrefs.GetString(_model.guid.ToString());
+
+        if (File.Exists(path)) {
+            SceneManager.LoadScene("Timer");
+        } else {
+            SceneManager.LoadScene("Timer Settings");
+        }
+        save_game_model();
+    }
+
+    // public void start_settings() {
+    //     PlayerPrefs.SetString("active_game", _model.data.id);
+    //     string path = Application.persistentDataPath + "/" + _model.data.id + "/splits" + "split.json";
+
+    //     SceneManager.LoadScene("Timer Settings");
+    //     save_game_model();
+    // }
+
+    //replace with:
+    public void start_settings() {
+        PlayerPrefs.SetInt("active_game", _model.guid);
+        string path = Application.persistentDataPath + "/" + _model.guid + "/splits/" + "split.json";
+
+        SceneManager.LoadScene("Timer Settings");
+        //save_game_model_g();
+    }
+
+    // public void set_game(string game)
+    // {
+    //     string uri = "https://www.speedrun.com/api/v1/games/" + game;
+    //     StartCoroutine(get_request(uri));
+    // }
+
+    // replace with:
+//    public void set_game(GenericGameModel game) {
+//        game.
+//    }
+
+/*
+// the legue stuff is commented for now, we are refactoring to support multiple APIs, not only src
+// so since this isn't needed at the moment I chose to hide it to make the refactoring more managable.
     // Start is called before the first frame update
     public void start_game_syncronized() {
         // 1. register run with server
@@ -48,93 +111,69 @@ public class GameView : MonoBehaviour
             }
         }
     }
+*/
 
-    public void start_game() {
-        PlayerPrefs.SetString("active_game", _model.data.id);
-        string path = PlayerPrefs.GetString(_model.data.id);
-        //string path = Application.persistentDataPath + "/" + _model.data.id + "/splits/" + "/splits.json";
 
-        if (File.Exists(path)){
-            SceneManager.LoadScene("Timer");
-        } else {
-            SceneManager.LoadScene("Timer Settings");
-        }
-        save_game_model();
-    }
 
-    public void start_settings() {
-        PlayerPrefs.SetString("active_game", _model.data.id);
-        string path = Application.persistentDataPath + "/" + _model.data.id + "/splits" + "split.json";
+    // private IEnumerator get_request(string uri)
+    // {
+    //     using (UnityWebRequest request = UnityWebRequest.Get(uri))
+    //     {
+    //         yield return request.SendWebRequest();
 
-        SceneManager.LoadScene("Timer Settings");
-        save_game_model();
-    }
+    //         if (request.isNetworkError)
+    //         {
+    //             Debug.Log("Error: " + request.error);
+    //         } else
+    //         {
+    //             Debug.Log("\nRecieved: " + request.downloadHandler.text);
 
-    public void set_game(string game)
-    {
-        string uri = "https://www.speedrun.com/api/v1/games/" + game;
-        StartCoroutine(get_request(uri));
-    }
+    //             _model = JsonConvert.DeserializeObject<speedrun.GameModel>(request.downloadHandler.text);
 
-    private IEnumerator get_request(string uri)
-    {
-        using (UnityWebRequest request = UnityWebRequest.Get(uri))
-        {
-            yield return request.SendWebRequest();
+    //             string path = Application.persistentDataPath + "/" + _model.data.id;
+    //             Directory.CreateDirectory(path);
 
-            if (request.isNetworkError)
-            {
-                Debug.Log("Error: " + request.error);
-            } else
-            {
-                Debug.Log("\nRecieved: " + request.downloadHandler.text);
-
-                _model = JsonConvert.DeserializeObject<speedrun.GameModel>(request.downloadHandler.text);
-
-                string path = Application.persistentDataPath + "/" + _model.data.id;
-                Directory.CreateDirectory(path);
-
-                if (_title != null) {
-                    _title.text = _model.data.names.international;
-                }
-                // Removed functionality since it really doesn't seem to work at all!
+    //             if (_title != null) {
+    //                 _title.text = _model.data.names.international;
+    //             }
+    //             // Removed functionality since it really doesn't seem to work at all!
                 
-                //     speedrun.PlatformCache cache = GameListManager._platform_cache;
-                //     foreach(string key in _model.data.platforms) {
-                //         _system.text = "";
-                //         if (cache.platforms.ContainsKey(key)) {
-                //             _system.text += ", " +  GameListManager._platform_cache.platforms[key].name;
-                //         } else {
-                //             _system.text = "Unknown";
-                //         }
-                //     }
-                // }
-                StartCoroutine(get_texture());
-            }
-        }
-    }
+    //             //     speedrun.PlatformCache cache = GameListManager._platform_cache;
+    //             //     foreach(string key in _model.data.platforms) {
+    //             //         _system.text = "";
+    //             //         if (cache.platforms.ContainsKey(key)) {
+    //             //             _system.text += ", " +  GameListManager._platform_cache.platforms[key].name;
+    //             //         } else {
+    //             //             _system.text = "Unknown";
+    //             //         }
+    //             //     }
+    //             // }
+    //             StartCoroutine(get_texture());
+    //         }
+    //     }
+    // }
 
-    private IEnumerator get_texture()
-    {
-        string url = _model.data.assets.cover_medium.uri;
-        UnityWebRequest texture_request = UnityWebRequestTexture.GetTexture(url);
-        yield return texture_request.SendWebRequest();
+    // private IEnumerator get_texture()
+    // {
+    //     string url = _model.data.assets.cover_medium.uri;
+    //     UnityWebRequest texture_request = UnityWebRequestTexture.GetTexture(url);
+    //     yield return texture_request.SendWebRequest();
 
-        if (texture_request.isNetworkError || texture_request.isHttpError)
-        {
-            Debug.Log(texture_request.error);
-        } else
-        {
-            Texture2D texture = ((DownloadHandlerTexture)texture_request.downloadHandler).texture;
-            Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(.5f, .5f));
-            _thumb.sprite = sprite;
+    //     if (texture_request.isNetworkError || texture_request.isHttpError)
+    //     {
+    //         Debug.Log(texture_request.error);
+    //     } else
+    //     {
+    //         Texture2D texture = ((DownloadHandlerTexture)texture_request.downloadHandler).texture;
+    //         Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(.5f, .5f));
+    //         _thumb.sprite = sprite;
 
-            // Store the file locally
-            byte[] img = texture.EncodeToPNG();
-            string path = Application.persistentDataPath + "/" + _model.data.id + "/game_thumb.png";
-            File.WriteAllBytes(path, img);
-        }
-    }
+    //         // Store the file locally
+    //         byte[] img = texture.EncodeToPNG();
+    //         string path = Application.persistentDataPath + "/" + _model.data.id + "/game_thumb.png";
+    //         File.WriteAllBytes(path, img);
+    //     }
+    // }
     
     private void save_game_model()
     {
@@ -150,41 +189,41 @@ public class GameView : MonoBehaviour
         stream.Close();
     }
 
-    public static speedrun.RunModel load_game_model(string game_id)
-    {
-        //string path = Application.persistentDataPath + "/" + game_id + "/splits/split.json";
-        string path = PlayerPrefs.GetString(game_id);
+    // public static speedrun.RunModel load_game_model(string game_id)
+    // {
+    //     //string path = Application.persistentDataPath + "/" + game_id + "/splits/split.json";
+    //     string path = PlayerPrefs.GetString(game_id);
 
-        if (File.Exists(path))
-        {
-            //BinaryFormatter formatter = new BinaryFormatter();
-            FileStream fs = new FileStream(path, FileMode.Open);
-            StreamReader sr = new StreamReader(fs);
+    //     if (File.Exists(path))
+    //     {
+    //         //BinaryFormatter formatter = new BinaryFormatter();
+    //         FileStream fs = new FileStream(path, FileMode.Open);
+    //         StreamReader sr = new StreamReader(fs);
 
-            string json = sr.ReadToEnd();
-            sr.Close();
-            fs.Close();
-            speedrun.RunModel model = JsonConvert.DeserializeObject<speedrun.RunModel>(json);
-            return model;
-        } else {
-            Debug.Log("no file found for: " + path);
-            Debug.Log("creating from known data");
+    //         string json = sr.ReadToEnd();
+    //         sr.Close();
+    //         fs.Close();
+    //         speedrun.RunModel model = JsonConvert.DeserializeObject<speedrun.RunModel>(json);
+    //         return model;
+    //     } else {
+    //         Debug.Log("no file found for: " + path);
+    //         Debug.Log("creating from known data");
 
-            string game_path = Application.persistentDataPath + "/" + game_id + "/gameinfo.bgi";
+    //         string game_path = Application.persistentDataPath + "/" + game_id + "/gameinfo.bgi";
 
-            BinaryFormatter formatter = new BinaryFormatter();
-            FileStream fs = new FileStream(game_path, FileMode.Open);
-            speedrun.GameModel game_model = formatter.Deserialize(fs) as speedrun.GameModel;
-            fs.Close();
+    //         BinaryFormatter formatter = new BinaryFormatter();
+    //         FileStream fs = new FileStream(game_path, FileMode.Open);
+    //         speedrun.GameModel game_model = formatter.Deserialize(fs) as speedrun.GameModel;
+    //         fs.Close();
 
-            speedrun.RunModel model = new speedrun.RunModel();
-            model.run = new speedrun.Run();
-            model.run.game_meta.thumb_path = "game_thumb.png";
-            model.run.game_meta.name = game_model.data.names.international;
+    //         speedrun.RunModel model = new speedrun.RunModel();
+    //         model.run = new speedrun.Run();
+    //         model.run.game_meta.thumb_path = "game_thumb.png";
+    //         model.run.game_meta.name = game_model.data.names.international;
 
-            // also need to write it to file, so we aren't missing it next time!
+    //         // also need to write it to file, so we aren't missing it next time!
 
-            return model;
-        }
-    }
+    //         return model;
+    //     }
+    // }
 }

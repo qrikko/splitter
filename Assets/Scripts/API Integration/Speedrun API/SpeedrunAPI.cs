@@ -19,6 +19,29 @@ namespace speedrun {
         public delegate void fetch_game_model_callback(GameModel result);
         public delegate void fetch_game_image_callback(Sprite s);
 
+        public void populate_search(string terms, GameListContent games) {
+            StartCoroutine(search_game(terms, games));
+        }
+
+        private IEnumerator search_game(string terms, GameListContent games) {
+            string uri = "http://www.speedrun.com/api/v1/games?name=" + UnityWebRequest.EscapeURL(terms);
+            using (UnityWebRequest request = UnityWebRequest.Get(uri)) {
+                request.SetRequestHeader("Content-Type", "application/json");
+                yield return request.SendWebRequest();
+                
+                if (request.isNetworkError) {
+                    Debug.Log("Error: " + request.error);
+                } else {
+                    GameSearchModel game_list = JsonUtility.FromJson<GameSearchModel>(request.downloadHandler.text);
+
+                    foreach (GameData data in game_list.data) {
+                        GameView game_view = Instantiate(games.game_view_prefab, games.transform);
+                        game_view.set_game(data.id);
+                    }
+                }
+            }
+        }
+
         public void fetch_game_image(string game_id, GameImageTypes type, fetch_game_image_callback callback) {
             // which cache to use might be based on type, we'll start out only doing thumbs..
             if (_game_thumb_cache.ContainsKey(game_id)) {

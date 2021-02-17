@@ -3,23 +3,42 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.Networking;
-using speedrun;
+//using speedrun;
 
-public class GameSearch : MonoBehaviour
-{
+public struct GenericGameModel {
+    public string title;
+    public int guid;
+}
+
+public class GameSearch : MonoBehaviour {
     [SerializeField] GameListContent _game_list_content = null;
+    [SerializeField] private bool _include_src = true;
+    [SerializeField] private bool _include_mmlb = true;
+
+    [SerializeField] private speedrun.SpeedrunAPI srcapi;
+    [SerializeField] private mmlbapi.MegamanLeaderboardsAPI mmlbapi;
     
-    public void update_game_search()
-    {
+    public void update_game_search() {
         string terms = GetComponent<TMP_InputField>().text;
-        if (terms.Length > 2)
-        {
-            StartCoroutine(search_game(terms));
+        if (terms.Length > 2) {
+            //List<GenericGameModel> games = new List<GenericGameModel>(5);
+            foreach (Transform gv in _game_list_content.transform) {
+                Destroy (gv.gameObject);
+            }
+
+            if (_include_src) {
+                srcapi.populate_search(terms, _game_list_content);                
+            }
+            if (_include_mmlb) {
+                mmlbapi.populate_search(terms, _game_list_content);
+            }
+
+           // StartCoroutine(search_game(terms));
         }
     }
 
-    private IEnumerator search_game(string terms)
-    {
+/*    private IEnumerator search_game(string terms)
+    {        
         string uri = "http://www.speedrun.com/api/v1/games?name=" + UnityWebRequest.EscapeURL(terms);
         
         using (UnityWebRequest request = UnityWebRequest.Get(uri))
@@ -45,5 +64,8 @@ public class GameSearch : MonoBehaviour
                 }
             }
         }
+        
     }
+*/
+
 }
