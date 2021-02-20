@@ -23,7 +23,7 @@ public class ImportExportSplits : MonoBehaviour
     }
 
     private void create_splits_from_xml(string xml_path) {
-        speedrun.RunModel run = new speedrun.RunModel();
+        splitter.RunModel run = new splitter.RunModel();
 
         XmlDocument doc = new XmlDocument();
         doc.Load(xml_path);
@@ -42,7 +42,7 @@ public class ImportExportSplits : MonoBehaviour
         // Split meta-data
         XmlNode segment_nodelist = doc.DocumentElement.SelectSingleNode("/Run/Segments");
         foreach(XmlNode node in segment_nodelist) {
-            speedrun.SplitMeta m = new speedrun.SplitMeta();
+            splitter.SplitMeta m = new splitter.SplitMeta();
             
             m.name = node.SelectSingleNode("Name").InnerText;
             m.thumb_path = node.SelectSingleNode("Icon").InnerText;
@@ -60,7 +60,7 @@ public class ImportExportSplits : MonoBehaviour
             // parse the history for the run!
             XmlNode history = node.SelectSingleNode("SegmentHistory");
             foreach (XmlNode entry in history) {
-                speedrun.Split split = new speedrun.Split();
+                splitter.Split split = new splitter.Split();
                 
                 split.attempt_index = System.Int32.Parse(entry.Attributes.GetNamedItem("id").InnerText);
                 System.TimeSpan entry_ts = System.TimeSpan.Parse(entry.SelectSingleNode("RealTime").InnerText);
@@ -78,7 +78,7 @@ public class ImportExportSplits : MonoBehaviour
         // Attempts
         XmlNode attempts = doc.DocumentElement.SelectSingleNode("/Run/AttemptHistory");
         foreach(XmlNode attempt_node in attempts) {
-            speedrun.RunAttempt attempt = new speedrun.RunAttempt();
+            splitter.RunAttempt attempt = new splitter.RunAttempt();
             attempt.attempt_index = System.Int32.Parse(attempt_node.Attributes.GetNamedItem("id").InnerText);
             attempt.start_datetime = attempt_node.Attributes.GetNamedItem("started").InnerText;
             attempt.end_datetime = attempt_node.Attributes.GetNamedItem("ended").InnerText;

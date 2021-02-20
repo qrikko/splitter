@@ -21,25 +21,34 @@ public class GameView : MonoBehaviour
         set { _title.text = value; }
     }
 
-//    protected speedrun.GameModel _model;
-    // replace with:
     protected GenericGameModel _model;
+    
+    //@todo: Should be able to abstract the difference here as well I think..
+    public void set_model(mmlbapi.GameModel model) {
+        _model = model;
+        _model.guid = model.id.ToString();
+        _model.title = model.name;
+        _model.api_uri = "http://megamanleaderboards.net/api/";
+        _title.text = _model.title;
+    }
 
-    // public void start_game() {
-    //     PlayerPrefs.SetString("active_game", _model.data.id);
-    //     string path = PlayerPrefs.GetString(_model.data.id);
-    //     //string path = Application.persistentDataPath + "/" + _model.data.id + "/splits/" + "/splits.json";
+    public void set_model(speedrun.GameModel model) {
+        _model.guid = model.data.id;
+        _model.title = model.data.names.international;
+        _model.api_uri = "https://www.speedrun.com/api/v1/";
+        _title.text = _model.title;
+    }
 
-    //     if (File.Exists(path)){
-    //         SceneManager.LoadScene("Timer");
-    //     } else {
-    //         SceneManager.LoadScene("Timer Settings");
-    //     }
-    //     save_game_model();
-    // }
-    // Replace with:
+    public void load(string guid, string api) {
+        if(api == "http://megamanleaderboards.net/api/") {
+            mmlbapi.GameModel model = new mmlbapi.GameModel();
+            model.load(guid);
+            set_model(model);
+        }
+    }
+
     public void start_game() {
-        PlayerPrefs.SetInt("active_game", _model.guid);
+        PlayerPrefs.SetString("active_game", _model.guid);
         string path = PlayerPrefs.GetString(_model.guid.ToString());
 
         if (File.Exists(path)) {
@@ -47,36 +56,22 @@ public class GameView : MonoBehaviour
         } else {
             SceneManager.LoadScene("Timer Settings");
         }
-        save_game_model();
+        //@??? I think this is not needed, we already saved the game model in a .model file, the bgi is a binary version but
+        //@??? I think they are meant to do the same thing?
+        //save_game_model();
     }
-
-    // public void start_settings() {
-    //     PlayerPrefs.SetString("active_game", _model.data.id);
-    //     string path = Application.persistentDataPath + "/" + _model.data.id + "/splits" + "split.json";
-
-    //     SceneManager.LoadScene("Timer Settings");
-    //     save_game_model();
-    // }
-
     //replace with:
     public void start_settings() {
-        PlayerPrefs.SetInt("active_game", _model.guid);
+        PlayerPrefs.SetString("active_game", _model.guid.ToString());
         string path = Application.persistentDataPath + "/" + _model.guid + "/splits/" + "split.json";
 
         SceneManager.LoadScene("Timer Settings");
-        //save_game_model_g();
+        save_game_model();
     }
 
-    // public void set_game(string game)
-    // {
-    //     string uri = "https://www.speedrun.com/api/v1/games/" + game;
-    //     StartCoroutine(get_request(uri));
-    // }
-
-    // replace with:
-//    public void set_game(GenericGameModel game) {
-//        game.
-//    }
+    public void set_game(string guid) {
+        PlayerPrefs.SetString("active_game", guid);
+    }
 
 /*
 // the legue stuff is commented for now, we are refactoring to support multiple APIs, not only src
@@ -179,7 +174,7 @@ public class GameView : MonoBehaviour
     {
         BinaryFormatter formatter = new BinaryFormatter();
                 
-        string path = Application.persistentDataPath + "/" + _model.data.id + "/gameinfo.bgi";
+        string path = Application.persistentDataPath + "/" + _model.guid + "/gameinfo.bgi";
         //Directory.CreateDirectory(Path.GetDirectoryName(path));
 
         FileStream stream = new FileStream(path, FileMode.Create);
@@ -189,41 +184,39 @@ public class GameView : MonoBehaviour
         stream.Close();
     }
 
-    // public static speedrun.RunModel load_game_model(string game_id)
-    // {
-    //     //string path = Application.persistentDataPath + "/" + game_id + "/splits/split.json";
-    //     string path = PlayerPrefs.GetString(game_id);
+    public static splitter.RunModel load_game_model(string game_id) {
+        //string path = Application.persistentDataPath + "/" + game_id + "/splits/split.json";
+        string path = PlayerPrefs.GetString(game_id);
+        
+        if (File.Exists(path)) {
+            //         //BinaryFormatter formatter = new BinaryFormatter();
+            FileStream fs = new FileStream(path, FileMode.Open);
+            StreamReader sr = new StreamReader(fs);
+            
+            string json = sr.ReadToEnd();
+            sr.Close();
+            fs.Close();
 
-    //     if (File.Exists(path))
-    //     {
-    //         //BinaryFormatter formatter = new BinaryFormatter();
-    //         FileStream fs = new FileStream(path, FileMode.Open);
-    //         StreamReader sr = new StreamReader(fs);
-
-    //         string json = sr.ReadToEnd();
-    //         sr.Close();
-    //         fs.Close();
-    //         speedrun.RunModel model = JsonConvert.DeserializeObject<speedrun.RunModel>(json);
-    //         return model;
-    //     } else {
-    //         Debug.Log("no file found for: " + path);
-    //         Debug.Log("creating from known data");
-
-    //         string game_path = Application.persistentDataPath + "/" + game_id + "/gameinfo.bgi";
-
-    //         BinaryFormatter formatter = new BinaryFormatter();
-    //         FileStream fs = new FileStream(game_path, FileMode.Open);
-    //         speedrun.GameModel game_model = formatter.Deserialize(fs) as speedrun.GameModel;
-    //         fs.Close();
-
-    //         speedrun.RunModel model = new speedrun.RunModel();
-    //         model.run = new speedrun.Run();
-    //         model.run.game_meta.thumb_path = "game_thumb.png";
-    //         model.run.game_meta.name = game_model.data.names.international;
-
-    //         // also need to write it to file, so we aren't missing it next time!
-
-    //         return model;
-    //     }
-    // }
+            splitter.RunModel model = JsonConvert.DeserializeObject<splitter.RunModel>(json);
+            return model;
+        } else {
+            Debug.Log("no file found for: " + path);
+            Debug.Log("creating from known data");
+            
+            string game_path = Application.persistentDataPath + "/" + game_id + "/gameinfo.bgi";
+            
+            BinaryFormatter formatter = new BinaryFormatter();
+            FileStream fs = new FileStream(game_path, FileMode.Open);
+            speedrun.GameModel game_model = formatter.Deserialize(fs) as speedrun.GameModel;
+            fs.Close();
+            
+            splitter.RunModel model = new splitter.RunModel();
+            model.run = new splitter.Run();
+            model.run.game_meta.thumb_path = "game_thumb.png";
+            model.run.game_meta.name = game_model.data.names.international;
+            
+            // also need to write it to file, so we aren't missing it next time!
+            return model;
+        }
+    }
 }

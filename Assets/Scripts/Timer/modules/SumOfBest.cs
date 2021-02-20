@@ -7,7 +7,7 @@ public class SumOfBest : MonoBehaviour
     [SerializeField] private TMP_Text _sob      = null;
     [SerializeField] private TMP_Text _attempts = null;
 
-    private speedrun.RunModel _model;
+    private splitter.RunModel _model;
     void OnEnable () {
         //@todo: set up delegates to update when gold is updated
         //SplitsManager
@@ -22,7 +22,7 @@ public class SumOfBest : MonoBehaviour
     }
 
     private void update_gold() {
-        _model = GameView.load_game_model(PlayerPrefs.GetString("active_game"));
+/*        _model = GameView.load_game_model(PlayerPrefs.GetString("active_game"));
         long sob = 0;
         foreach (speedrun.SplitMeta meta in _model.run.split_meta) {
             sob += meta.gold;
@@ -33,6 +33,7 @@ public class SumOfBest : MonoBehaviour
             format += "HH";
         }
         _sob.text = ts.ToString(@"mm\:ss\.ff");
+*/
     }
 
     void Start() {

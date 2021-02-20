@@ -5,10 +5,19 @@ using TMPro;
 using UnityEngine.Networking;
 //using speedrun;
 
-public struct GenericGameModel {
+
+// @todo: move the models into their own place, not in GameSearch.cs
+[System.Serializable]
+public abstract class GenericGameModel {
     public string title;
-    public int guid;
+    public string guid;
+    public string api_uri;
+
+    public abstract void save();
+    public abstract void load(string game_id);
 }
+
+
 
 public class GameSearch : MonoBehaviour {
     [SerializeField] GameListContent _game_list_content = null;

@@ -68,7 +68,7 @@ public class SplitRow : MonoBehaviour {
                 break;
             case SplitsManager.ViewMode.DURATION:
             case SplitsManager.ViewMode.POSSIBLE_SAVE:
-                speedrun.Split i = null;
+                splitter.Split i = null;
                 foreach(var pb in _model.history) {
                     if (pb.attempt_index == _model.pb_index) {
                         i = pb;
@@ -134,8 +134,8 @@ public class SplitRow : MonoBehaviour {
 
     public TMP_Text time { get { return _time; } }
 
-    private speedrun.SplitMeta _model;
-    public speedrun.SplitMeta model { 
+    private splitter.SplitMeta _model;
+    public splitter.SplitMeta model { 
         get { return _model;}
         set {
             _model = value;

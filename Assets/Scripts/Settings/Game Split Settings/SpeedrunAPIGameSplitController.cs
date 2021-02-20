@@ -25,7 +25,7 @@ public class SpeedrunAPIGameSplitController : MonoBehaviour {
 
     [SerializeField] private GameObject _name_select = null;
 
-    private speedrun.RunModel _split_model;
+    private splitter.RunModel _split_model;
     private speedrun.Categories _categories;
     private string _id;
 
@@ -159,7 +159,7 @@ public class SpeedrunAPIGameSplitController : MonoBehaviour {
     }
 
     public void add_split() {
-        speedrun.SplitMeta split = new speedrun.SplitMeta();
+        splitter.SplitMeta split = new splitter.SplitMeta();
         _split_model.run.split_meta.Add(split);
 
         Split s = Split.Instantiate(_split_row_prefab, _split_container.transform);
@@ -233,7 +233,7 @@ public class SpeedrunAPIGameSplitController : MonoBehaviour {
             Destroy(s.gameObject);
         }
 
-        foreach (speedrun.SplitMeta s in _split_model.run.split_meta ) {
+        foreach (splitter.SplitMeta s in _split_model.run.split_meta ) {
             Split split = Split.Instantiate(_split_row_prefab, _split_container.transform);
             split.model = s;
         }

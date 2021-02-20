@@ -25,7 +25,7 @@ namespace mmlbapi {
             foreach(GameModel data in _games.games_list.games) {
                 if (data.name.ToLower().Contains(terms.ToLower())) {
                     GameView game_view = Instantiate(games.game_view_prefab, games.transform);
-                    game_view.title = data.name;
+                    game_view.set_model(data);
                 }
             }
         }

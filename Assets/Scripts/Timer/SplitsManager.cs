@@ -30,13 +30,13 @@ public class SplitsManager : MonoBehaviour {
     [SerializeField] private SplitVerticalBar _scrollbar   = null;
 
     private System.TimeSpan _previous_diff = System.TimeSpan.Zero;
-    private speedrun.RunAttempt _current_attempt = null;
+    private splitter.RunAttempt _current_attempt = null;
 
-    private speedrun.RunModel _model;
+    private splitter.RunModel _model;
     private string _id = null;
     private int _split_index = 0;
 
-    private speedrun.Split _previous_split = null;
+    private splitter.Split _previous_split = null;
     private SplitRow _current_split_row;
 
     public delegate void change_view_mode_delegate(ViewMode mode);
@@ -79,7 +79,7 @@ public class SplitsManager : MonoBehaviour {
 
     public void start_run() {
         _previous_diff = System.TimeSpan.Zero;
-        speedrun.RunAttempt new_attempt = new speedrun.RunAttempt();
+        splitter.RunAttempt new_attempt = new splitter.RunAttempt();
         new_attempt.attempt_index = _model.run.game_meta.attempts_count;
 
         DateTime now = DateTime.Now;
@@ -150,7 +150,7 @@ public class SplitsManager : MonoBehaviour {
         _timer.end_run(pb);
 
         if (_timer.elapsed_ms < pb || pb==0) {
-            foreach (speedrun.SplitMeta sm in _model.run.split_meta) {
+            foreach (splitter.SplitMeta sm in _model.run.split_meta) {
                 sm.pb = sm.history[sm.history.Count - 1].split_time;
                 sm.pb_index = _current_attempt.attempt_index;
             }
@@ -170,8 +170,8 @@ public class SplitsManager : MonoBehaviour {
         on_run_end();
     }
 
-    private speedrun.Split create_split(long split_time) {
-        speedrun.Split split = new speedrun.Split();
+    private splitter.Split create_split(long split_time) {
+        splitter.Split split = new splitter.Split();
         split.attempt_index = _current_attempt.attempt_index;
         split.split_time = split_time;
         _model.run.split_meta[_split_index].history.Add(split);
@@ -188,7 +188,7 @@ public class SplitsManager : MonoBehaviour {
 
         _split_index++;
 
-        speedrun.Split split = create_split(-1);
+        splitter.Split split = create_split(-1);
         _current_split_row.delta.text = "-";
         split.split_duration = 0; // or -1 or something?
         //GetComponentsInChildren<SplitRow>()[_split_index].split_in(); // might need to tell it it can't gold!
@@ -242,7 +242,7 @@ public class SplitsManager : MonoBehaviour {
             _timer.resume();
         }
 
-        speedrun.Split split = create_split(_timer.elapsed_ms);
+        splitter.Split split = create_split(_timer.elapsed_ms);
         TimeSpan elapsed = _timer.elapsed_ts; // total milliseconds for precission?
         _current_split_row.time.text = elapsed.ToString(@"m\:ss");
 
@@ -453,7 +453,7 @@ public class SplitsManager : MonoBehaviour {
             _timer.offset = 0.0f;
         }
 
-        foreach (speedrun.SplitMeta s in _model.run.split_meta) {
+        foreach (splitter.SplitMeta s in _model.run.split_meta) {
             SplitRow split = SplitRow.Instantiate(_split_prefab, transform);
             split.model = s;
             if (_limerick_mode) {

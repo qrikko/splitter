@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
 
-namespace speedrun
+namespace splitter
 {   
     [System.Serializable]
     public class Split {

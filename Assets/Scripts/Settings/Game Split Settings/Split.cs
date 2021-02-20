@@ -14,15 +14,15 @@ public class Split : MonoBehaviour, ISelectHandler
     [SerializeField] private TMP_InputField _best_segment = null;
     [SerializeField] private FileBrowser _filepicker = null;
 
-    public delegate void select_delegate(speedrun.SplitMeta model);
+    public delegate void select_delegate(splitter.SplitMeta model);
     public static select_delegate on_select;
     public delegate void glod_reset_delegate();
     public static glod_reset_delegate on_glod_reset;
 
     private string _thumb_path;
 
-    private speedrun.SplitMeta _model;
-    public speedrun.SplitMeta model {
+    private splitter.SplitMeta _model;
+    public splitter.SplitMeta model {
     get {
         return _model;
     } set {
