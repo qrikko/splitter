@@ -72,7 +72,7 @@ public class SplitsManager : MonoBehaviour {
     private void save() {
         string path = PlayerPrefs.GetString(_id);
         if (path == null || path == "") {
-            path = Application.persistentDataPath + "/" + _id + "/splits/split.json";
+            path = Application.persistentDataPath + "/game_cache/" + _id + "/splits/split.json";
         }
         _model.save(path);
     }

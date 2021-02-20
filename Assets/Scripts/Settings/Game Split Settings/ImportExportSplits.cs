@@ -91,7 +91,7 @@ public class ImportExportSplits : MonoBehaviour
         json_path = json_path.Replace(".lss", ".json");
 
         string id = PlayerPrefs.GetString("active_game");
-        string path = Application.persistentDataPath + "/" + id + "/splits/" + json_path;
+        string path = Application.persistentDataPath + "/game_cache/" + id + "/splits/" + json_path;
 
         run.save(path);
         on_import_done(json_path);

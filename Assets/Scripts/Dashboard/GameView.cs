@@ -63,10 +63,12 @@ public class GameView : MonoBehaviour
     //replace with:
     public void start_settings() {
         PlayerPrefs.SetString("active_game", _model.guid.ToString());
-        string path = Application.persistentDataPath + "/" + _model.guid + "/splits/" + "split.json";
+        string path = Application.persistentDataPath + "/game_cache/" + _model.guid + "/splits/" + "split.json";
 
         SceneManager.LoadScene("Timer Settings");
-        save_game_model();
+     
+        // Do we actually need to save again? I think not..
+        //save_game_model();
     }
 
     public void set_game(string guid) {
@@ -174,7 +176,7 @@ public class GameView : MonoBehaviour
     {
         BinaryFormatter formatter = new BinaryFormatter();
                 
-        string path = Application.persistentDataPath + "/" + _model.guid + "/gameinfo.bgi";
+        string path = Application.persistentDataPath + "/game_cache/" + _model.guid + "/game.model";
         //Directory.CreateDirectory(Path.GetDirectoryName(path));
 
         FileStream stream = new FileStream(path, FileMode.Create);
@@ -202,18 +204,20 @@ public class GameView : MonoBehaviour
         } else {
             Debug.Log("no file found for: " + path);
             Debug.Log("creating from known data");
-            
-            string game_path = Application.persistentDataPath + "/" + game_id + "/gameinfo.bgi";
-            
-            BinaryFormatter formatter = new BinaryFormatter();
+
+            string game_path = Application.persistentDataPath + "/game_cache/" + game_id + "/game.model";
             FileStream fs = new FileStream(game_path, FileMode.Open);
-            speedrun.GameModel game_model = formatter.Deserialize(fs) as speedrun.GameModel;
-            fs.Close();
-            
+            StreamReader sr = new StreamReader(fs);
+
+            //@todo: Need to figure out which type of model we are deserializing
+            // the info is avaliable in the pinned file.. but might want to find a simpler way to figure it out..
+            GenericGameModel game_model = JsonConvert.DeserializeObject<mmlbapi.GameModel>(sr.ReadToEnd());            
+
             splitter.RunModel model = new splitter.RunModel();
             model.run = new splitter.Run();
             model.run.game_meta.thumb_path = "game_thumb.png";
-            model.run.game_meta.name = game_model.data.names.international;
+//            model.run.game_meta.name = game_model.data.names.international;
+            model.run.game_meta.name = game_model.title;
             
             // also need to write it to file, so we aren't missing it next time!
             return model;

@@ -62,7 +62,7 @@ public class SpeedrunAPIGameSplitController : MonoBehaviour {
     // name the file?
     private void save()
     {
-        string path = Application.persistentDataPath + "/" + _id + "/splits/" + _split_name.text + "/splits.json";
+        string path = Application.persistentDataPath + "/game_cache/" + _id + "/splits/" + _split_name.text + "/splits.json";
         
         if (_split_model != null) {
             _split_model.save(path);
@@ -103,11 +103,11 @@ public class SpeedrunAPIGameSplitController : MonoBehaviour {
             _saved_splits.value = 1;
             string name = _saved_splits.options[1].text;
            
-            string path = Application.persistentDataPath + "/" + _id + "/splits/" + name;
+            string path = Application.persistentDataPath + "/game_cache/" + _id + "/splits/" + name;
             PlayerPrefs.SetString(_id, path);
 
             BinaryFormatter formatter = new BinaryFormatter();
-            string meta_path = Application.persistentDataPath + "/" + _id + "/splits/meta.data";
+            string meta_path = Application.persistentDataPath + "/game_cache/" + _id + "/splits/meta.data";
             FileStream stream = new FileStream(meta_path, FileMode.Create);
 
             formatter.Serialize(stream, _split_name.text);
@@ -131,7 +131,7 @@ public class SpeedrunAPIGameSplitController : MonoBehaviour {
     public void create_new_splits(TMP_InputField name) {
         // take the name and add it to the _saved_splists, also set the value
 
-        string path = Application.persistentDataPath + "/" + _id + "/splits/" + name.text + "/splits.json";
+        string path = Application.persistentDataPath + "/game_cache/" + _id + "/splits/" + name.text + "/splits.json";
         PlayerPrefs.SetString(_id, path);
 
         foreach(Transform t in _split_container.transform) {
@@ -172,7 +172,7 @@ public class SpeedrunAPIGameSplitController : MonoBehaviour {
         
         // this is written to know what split file to load when we start the splits        
         BinaryFormatter formatter = new BinaryFormatter();
-        string meta_path = Application.persistentDataPath + "/" + _id + "/splits/meta.data";
+        string meta_path = Application.persistentDataPath + "/game_cache/" + _id + "/splits/meta.data";
         FileStream stream = new FileStream(meta_path, FileMode.Create);
 
         formatter.Serialize(stream, _split_name.text);
@@ -184,14 +184,14 @@ public class SpeedrunAPIGameSplitController : MonoBehaviour {
             return;
         }
         _split_name.text = Path.GetFileNameWithoutExtension(_saved_splits.options[index].text);
-        string path = Application.persistentDataPath + "/" + _id + "/splits/" + _split_name.text + "/splits.json";
+        string path = Application.persistentDataPath + "/game_cache/" + _id + "/splits/" + _split_name.text + "/splits.json";
         PlayerPrefs.SetString(_id, path);
 
         load_splits();
     }
 
     private void populate_splits() {
-        string path = Application.persistentDataPath + "/" + _id + "/splits/";
+        string path = Application.persistentDataPath + "/game_cache/" + _id + "/splits/";
         DirectoryInfo d = new DirectoryInfo(path);
         FileInfo[] splits = d.GetFiles("*.json");
 
@@ -245,11 +245,17 @@ public class SpeedrunAPIGameSplitController : MonoBehaviour {
         Screen.SetResolution(625,450, false);
         
         _id = PlayerPrefs.GetString("active_game");
-        
-        string uri = "https://www.speedrun.com/api/v1/games/" + _id + "/categories";
-        StartCoroutine(fetch_categories(uri));
 
-        string meta_path = Application.persistentDataPath + "/" + _id + "/splits/meta.data";
+        // check for game cache first, basically if there is a game at the path:
+        string model_path = UnityEngine.Application.persistentDataPath + "/game_cache/" + _id + "/game.model";
+        if (File.Exists(model_path)) {
+
+        }
+
+        //string uri = "https://www.speedrun.com/api/v1/games/" + _id + "/categories";
+        //StartCoroutine(fetch_categories(uri));
+
+        string meta_path = Application.persistentDataPath + "/game_cache/" + _id + "/splits/meta.data";
         if (File.Exists(meta_path)) {
             BinaryFormatter formatter = new BinaryFormatter();
             FileStream stream = new FileStream(meta_path, FileMode.Open);
@@ -258,7 +264,7 @@ public class SpeedrunAPIGameSplitController : MonoBehaviour {
             stream.Close();
         } else {
             _split_name.text = "split";
-            string path = Application.persistentDataPath + "/" + _id + "/splits/" + "/splits.json";
+            string path = Application.persistentDataPath + "/game_cache/" + _id + "/splits/" + "splits.json";
             Directory.CreateDirectory(Path.GetDirectoryName(path));
             PlayerPrefs.SetString(_id, path);
 
@@ -278,7 +284,7 @@ public class SpeedrunAPIGameSplitController : MonoBehaviour {
     }
 
     public void request_save() {
-        string path = Application.persistentDataPath + "/" + _id + "/splits/" + _split_name.text + "/splits.json";
+        string path = Application.persistentDataPath + "/game_cache/" + _id + "/splits/" + _split_name.text + "/splits.json";
         _split_model.save(path);
     }
 

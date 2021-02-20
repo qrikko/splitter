@@ -31,7 +31,7 @@ namespace mmlbapi {
         public Categories[] categories;
 
         public override void save() {
-            string path = UnityEngine.Application.persistentDataPath + "/game_models/" + guid + ".model";
+            string path = UnityEngine.Application.persistentDataPath + "/game_cache/" + guid + "/game.model";
             // Need to check if the path to the file exists, or create it, or is FileMode.OpenOrCreate enough?
             // if(System.IO.File.Exists(path)) {}
 
@@ -48,8 +48,8 @@ namespace mmlbapi {
             fs.Close();
         }
 
-        public override void load(string game_id) {
-            string path = UnityEngine.Application.persistentDataPath + "/game_models/" + game_id + ".model";
+        public override void load(string game_id) {            
+            string path = UnityEngine.Application.persistentDataPath + "/game_cache/" + game_id + "/game.model";
             // Need to check if the path to the file exists, or create it, or is FileMode.OpenOrCreate enough?
             
             if(System.IO.File.Exists(path)) {
