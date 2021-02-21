@@ -21,7 +21,7 @@ public class GameView : MonoBehaviour
         set { _title.text = value; }
     }
 
-    protected GenericGameModel _model;
+    protected splitter.GenericGameModel _model;
     
     //@todo: Should be able to abstract the difference here as well I think..
     public void set_model(mmlbapi.GameModel model) {
@@ -37,7 +37,9 @@ public class GameView : MonoBehaviour
         _model.guid = model.id;
         _model.title = model.names.international;
         _model.api_uri = "https://www.speedrun.com/api/v1/";
+        
         _title.text = _model.title;
+        _thumb = _model.get_asset(splitter.AssetType.Thumb);
     }
 
     public void load(string guid, string api) {
@@ -216,7 +218,7 @@ public class GameView : MonoBehaviour
 
             //@todo: Need to figure out which type of model we are deserializing
             // the info is avaliable in the pinned file.. but might want to find a simpler way to figure it out..
-            GenericGameModel game_model = JsonConvert.DeserializeObject<mmlbapi.GameModel>(sr.ReadToEnd());            
+            splitter.GenericGameModel game_model = JsonConvert.DeserializeObject<mmlbapi.GameModel>(sr.ReadToEnd());            
 
             splitter.RunModel model = new splitter.RunModel();
             model.run = new splitter.Run();

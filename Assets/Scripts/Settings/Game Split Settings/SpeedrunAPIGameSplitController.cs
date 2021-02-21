@@ -252,9 +252,6 @@ public class SpeedrunAPIGameSplitController : MonoBehaviour {
 
         }
 
-        //string uri = "https://www.speedrun.com/api/v1/games/" + _id + "/categories";
-        //StartCoroutine(fetch_categories(uri));
-
         string meta_path = Application.persistentDataPath + "/game_cache/" + _id + "/splits/meta.data";
         if (File.Exists(meta_path)) {
             BinaryFormatter formatter = new BinaryFormatter();

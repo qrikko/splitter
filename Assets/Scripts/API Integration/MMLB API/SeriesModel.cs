@@ -1,5 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using splitter;
+using UnityEngine.UI;
 
 namespace mmlbapi {
     [System.Serializable]
@@ -20,7 +22,7 @@ namespace mmlbapi {
     }
 
     [System.Serializable]
-    public class GameModel : GenericGameModel {
+    public class GameModel : splitter.GenericGameModel {
         public int id;
         public int series_id;
         public string name;
@@ -74,6 +76,11 @@ namespace mmlbapi {
                 sr.Close();
                 fs.Close();
             }
+        }
+
+        public override Image get_asset(AssetType type)
+        {
+            throw new System.NotImplementedException();
         }
     }
 

@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Newtonsoft.Json;
 
-namespace speedrun
-{
+namespace speedrun {
     [System.Serializable]
     public class CategoryPlayers
     {
@@ -32,7 +31,7 @@ namespace speedrun
     }
 
     [System.Serializable]
-    public class GameData : GenericGameModel {
+    public class GameData : splitter.GenericGameModel {
         public string id;
         public Names names;
         public string abbreviation;
@@ -53,6 +52,31 @@ namespace speedrun
         public string created;
         public Assets assets;
         public Links[] links;
+
+        public override UnityEngine.UI.Image get_asset(splitter.AssetType type) {
+            if (_asset_cache.ContainsKey(type)) {
+                return _asset_cache[type];
+            } else {
+                string cache_path = UnityEngine.Application.persistentDataPath
+                    + "/game_cache/" + guid + "/assets/";
+                if (System.IO.Directory.Exists(cache_path) == false) {
+                    System.IO.Directory.CreateDirectory(cache_path);
+                }
+
+                System.IO.DirectoryInfo di = new System.IO.DirectoryInfo(cache_path);
+                System.IO.FileInfo[] files = di.GetFiles();
+
+                foreach(System.IO.FileInfo file in files) {
+                    if (System.IO.File.Exists(System.IO.Path.GetFileNameWithoutExtension(file.Name))) {
+                        Debug.LogFormat("File '{0}' not in cache but on disk!", type.ToString());
+                    }
+                }
+            }
+            // if we get this far we don't have it on ram, not on disk and we have to download it and save it to disk!
+            Debug.LogFormat("File '{0}' is not in ram, nor on disk, so we need to fetch it from: '{1}'",
+                type.ToString(), assets.cover_medium.uri);
+            return null;
+        }
 
         public override void save() {
             string path = UnityEngine.Application.persistentDataPath + "/game_cache/" + guid + "/game.model";
@@ -112,8 +136,7 @@ namespace speedrun
     }
 
     [System.Serializable]
-    public class Assets
-    {
+    public class Assets {
         public Image logo;
         [JsonProperty(PropertyName = "cover-tiny")]
         public Image cover_tiny;

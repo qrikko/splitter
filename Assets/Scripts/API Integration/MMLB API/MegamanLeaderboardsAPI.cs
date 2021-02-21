@@ -30,28 +30,6 @@ namespace mmlbapi {
             }
         }
 
-/*
-        private IEnumerator search_game(string terms, GameListContent games) {
-            string uri = "http://www.speedrun.com/api/v1/games?name=" + UnityWebRequest.EscapeURL(terms);
-            using (UnityWebRequest request = UnityWebRequest.Get(uri)) {
-                request.SetRequestHeader("Content-Type", "application/json");
-                yield return request.SendWebRequest();
-                
-                if (request.isNetworkError) {
-                    Debug.Log("Error: " + request.error);
-                } else {
-                    GameSearchModel game_list = JsonUtility.FromJson<GameSearchModel>(request.downloadHandler.text);
-
-                    foreach (GameData data in game_list.data) {
-                        GameView game_view = Instantiate(games.game_view_prefab, games.transform);
-                        game_view.set_game(data.id);
-                    }
-                }
-            }
-        }
-*/
-
-
         private IEnumerator fetch_game_list() {
             string uri = "http://megamanleaderboards.net/api/games.php";
             

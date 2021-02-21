@@ -32,7 +32,8 @@ namespace speedrun {
                 if (request.isNetworkError) {
                     Debug.Log("Error: " + request.error);
                 } else {
-                    GameSearchModel game_list = JsonUtility.FromJson<GameSearchModel>(request.downloadHandler.text);
+                    //GameSearchModel game_list = JsonUtility.FromJson<GameSearchModel>(request.downloadHandler.text);
+                    GameSearchModel game_list = JsonConvert.DeserializeObject<GameSearchModel>(request.downloadHandler.text);
 
                     foreach (GameData data in game_list.data) {
                         GameView game_view = Instantiate(games.game_view_prefab, games.transform);
