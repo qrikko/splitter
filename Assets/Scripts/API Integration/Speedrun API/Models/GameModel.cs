@@ -32,8 +32,7 @@ namespace speedrun
     }
 
     [System.Serializable]
-    public class GameData
-    {
+    public class GameData : GenericGameModel {
         public string id;
         public Names names;
         public string abbreviation;
@@ -54,6 +53,62 @@ namespace speedrun
         public string created;
         public Assets assets;
         public Links[] links;
+
+        public override void save() {
+            string path = UnityEngine.Application.persistentDataPath + "/game_cache/" + guid + "/game.model";
+            // Need to check if the path to the file exists, or create it, or is FileMode.OpenOrCreate enough?
+            // if(System.IO.File.Exists(path)) {}
+
+            if (System.IO.Directory.Exists(System.IO.Path.GetDirectoryName(path)) == false) {
+                System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(path));
+            }
+            
+            System.IO.FileStream fs = new System.IO.FileStream(path, System.IO.FileMode.OpenOrCreate);
+            System.IO.StreamWriter sw = new System.IO.StreamWriter(fs);
+
+            string json = Newtonsoft.Json.JsonConvert.SerializeObject(this, Newtonsoft.Json.Formatting.Indented);
+            sw.Write(json);
+            sw.Close();
+            fs.Close();
+        }
+
+        public override void load(string game_id) {            
+            string path = UnityEngine.Application.persistentDataPath + "/game_cache/" + game_id + "/game.model";
+            // Need to check if the path to the file exists, or create it, or is FileMode.OpenOrCreate enough?
+            
+            if(System.IO.File.Exists(path)) {
+                System.IO.FileStream fs = new System.IO.FileStream(path, System.IO.FileMode.Open);
+                System.IO.StreamReader sr = new System.IO.StreamReader(fs);
+
+                var tmp = Newtonsoft.Json.JsonConvert.DeserializeObject<GameData>(sr.ReadToEnd());
+                
+                id              = tmp.id;
+                names           = tmp.names;
+                abbreviation    = tmp.abbreviation;
+                weblink         = tmp.weblink;
+                released        = tmp.released;
+                release_date    = tmp.release_date;
+                ruleset         = tmp.ruleset;
+                romhack         = tmp.romhack;
+                gametypes       = tmp.gametypes;
+                platforms       = tmp.platforms;
+                regions         = tmp.regions;
+                genres          = tmp.genres;
+                engines         = tmp.engines;
+                developers      = tmp.developers;
+                publishers      = tmp.publishers;
+                created         = tmp.created;
+                assets          = tmp.assets;
+                links           = tmp.links;
+
+                title           = tmp.title;
+                guid            = tmp.guid;
+                api_uri         = tmp.api_uri;
+
+                sr.Close();
+                fs.Close();
+            }
+        }
     }
 
     [System.Serializable]

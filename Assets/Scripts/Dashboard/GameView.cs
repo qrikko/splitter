@@ -32,9 +32,10 @@ public class GameView : MonoBehaviour
         _title.text = _model.title;
     }
 
-    public void set_model(speedrun.GameModel model) {
-        _model.guid = model.data.id;
-        _model.title = model.data.names.international;
+    public void set_model(speedrun.GameData model) {
+        _model = model;
+        _model.guid = model.id;
+        _model.title = model.names.international;
         _model.api_uri = "https://www.speedrun.com/api/v1/";
         _title.text = _model.title;
     }
@@ -42,6 +43,10 @@ public class GameView : MonoBehaviour
     public void load(string guid, string api) {
         if(api == "http://megamanleaderboards.net/api/") {
             mmlbapi.GameModel model = new mmlbapi.GameModel();
+            model.load(guid);
+            set_model(model);
+        } else if (api == "https://www.speedrun.com/api/v1/") {
+            speedrun.GameData model = new speedrun.GameData();
             model.load(guid);
             set_model(model);
         }

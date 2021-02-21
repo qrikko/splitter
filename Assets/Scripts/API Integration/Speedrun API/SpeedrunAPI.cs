@@ -36,7 +36,8 @@ namespace speedrun {
 
                     foreach (GameData data in game_list.data) {
                         GameView game_view = Instantiate(games.game_view_prefab, games.transform);
-                        game_view.set_game(data.id);
+                        //game_view.set_game(data.id);
+                        game_view.set_model(data);
                     }
                 }
             }

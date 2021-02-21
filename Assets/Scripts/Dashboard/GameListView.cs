@@ -59,7 +59,7 @@ namespace splitter {
         }
 
         public void load_pinned_games() {
-            string path = Application.persistentDataPath + "pinned.json";
+            string path = Application.persistentDataPath + "/pinned.json";
             if (System.IO.File.Exists(path))
             {
                 // read from the file into _pinned
@@ -67,6 +67,11 @@ namespace splitter {
                 System.IO.StreamReader sr = new System.IO.StreamReader(fs);
 
                 _pinned = JsonConvert.DeserializeObject<PinnedGames>(sr.ReadToEnd());
+
+                // clear the view before we populate it
+                foreach (Transform t in _game_list_content.transform) {
+                    Destroy(t.gameObject);
+                }
 
                 foreach (KeyValuePair<string, List<string>> api in _pinned) {
                     foreach(string guid in api.Value) {
@@ -83,7 +88,7 @@ namespace splitter {
         }
 
         public void save_pinned_games () {
-            string path = Application.persistentDataPath + "pinned.json";
+            string path = Application.persistentDataPath + "/pinned.json";
             
             // read from the file into _pinned
             System.IO.FileStream fs = new System.IO.FileStream(path, System.IO.FileMode.Create);
