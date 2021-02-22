@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Newtonsoft.Json;
 
+using DownloadCallback = System.Func<object, System.ComponentModel.AsyncCompletedEventArgs>;
+
 namespace speedrun {
     [System.Serializable]
     public class CategoryPlayers
@@ -53,9 +55,9 @@ namespace speedrun {
         public Assets assets;
         public Links[] links;
 
-        public override UnityEngine.UI.Image get_asset(splitter.AssetType type) {
+        public override void get_asset(splitter.AssetType type, splitter.ImageAvaliable callback) {
             if (_asset_cache.ContainsKey(type)) {
-                return _asset_cache[type];
+                callback(_asset_cache[type]);
             } else {
                 string cache_path = UnityEngine.Application.persistentDataPath
                     + "/game_cache/" + guid + "/assets/";
@@ -75,7 +77,29 @@ namespace speedrun {
             // if we get this far we don't have it on ram, not on disk and we have to download it and save it to disk!
             Debug.LogFormat("File '{0}' is not in ram, nor on disk, so we need to fetch it from: '{1}'",
                 type.ToString(), assets.cover_medium.uri);
-            return null;
+                
+            using (System.Net.WebClient client = new System.Net.WebClient()) {
+                string extension = System.IO.Path.GetExtension(assets.cover_medium.uri);
+                string img_path = UnityEngine.Application.persistentDataPath + "/game_cache/" + guid + "/assets/" + type.ToString() + extension;
+                client.DownloadFileAsync(new System.Uri(assets.cover_medium.uri), img_path);
+                client.DownloadFileCompleted += new System.ComponentModel.AsyncCompletedEventHandler(
+                    (object sender, System.ComponentModel.AsyncCompletedEventArgs e) => {
+                        byte[] img_data = System.IO.File.ReadAllBytes(img_path);
+                        var foo = System.IO.File.GetAttributes(img_path);
+                        int w = assets.cover_medium.width;
+                        int h = assets.cover_medium.height;
+                        UnityEngine.Texture2D tex = new UnityEngine.Texture2D(
+                            w, h, TextureFormat.RGB24, false
+                        );
+                        tex.LoadImage(img_data);
+                        Rect rect = new Rect(0,0,w,h);
+                        Sprite sprite = Sprite.Create(tex, rect, new Vector2(0.5f,0.0f), 1.0f);
+
+                        _asset_cache[type] = sprite;
+                        callback(sprite);
+                    }
+                );
+            }
         }
 
         public override void save() {
@@ -163,7 +187,7 @@ namespace speedrun {
     public class Image
     {
         public string uri;
-        public int widht;
+        public int width;
         public int height;
     }
 

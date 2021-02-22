@@ -15,6 +15,7 @@ public class GameView : MonoBehaviour
 {
     [SerializeField] private Image _thumb = null;
     [SerializeField] private TMP_Text _title = null;
+    [SerializeField] private Sprite _load_indicator = null;
 
     public string title {
         get { return _title.text; }
@@ -39,7 +40,11 @@ public class GameView : MonoBehaviour
         _model.api_uri = "https://www.speedrun.com/api/v1/";
         
         _title.text = _model.title;
-        _thumb = _model.get_asset(splitter.AssetType.Thumb);
+        _thumb.sprite = _load_indicator;
+        splitter.ImageAvaliable callback = (Sprite s) => {
+            _thumb.sprite = s;
+        };
+        _model.get_asset(splitter.AssetType.Thumb, callback);
     }
 
     public void load(string guid, string api) {
@@ -81,7 +86,6 @@ public class GameView : MonoBehaviour
     public void set_game(string guid) {
         PlayerPrefs.SetString("active_game", guid);
     }
-
 /*
 // the legue stuff is commented for now, we are refactoring to support multiple APIs, not only src
 // so since this isn't needed at the moment I chose to hide it to make the refactoring more managable.

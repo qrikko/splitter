@@ -78,7 +78,7 @@ namespace mmlbapi {
             }
         }
 
-        public override Image get_asset(AssetType type)
+        public override void get_asset(AssetType type, splitter.ImageAvaliable callback)
         {
             throw new System.NotImplementedException();
         }

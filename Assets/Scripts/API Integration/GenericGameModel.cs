@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-using AssetCache = System.Collections.Generic.Dictionary<splitter.AssetType, UnityEngine.UI.Image>;
+using AssetCache = System.Collections.Generic.Dictionary<splitter.AssetType, UnityEngine.Sprite>;
+using DownloadCallback = System.Func<object, System.ComponentModel.AsyncCompletedEventArgs>;
 
 namespace splitter {
     public enum AssetType {
@@ -15,6 +16,8 @@ namespace splitter {
         Count
     };
 
+    public delegate void ImageAvaliable(Sprite sprite);
+
     [System.Serializable]
     public abstract class GenericGameModel {
         public string title;
@@ -25,6 +28,6 @@ namespace splitter {
 
         public abstract void save();
         public abstract void load(string game_id);
-        public abstract UnityEngine.UI.Image get_asset(AssetType type);
+        public abstract void get_asset(AssetType type, ImageAvaliable callback);
     }
 }
