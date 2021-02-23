@@ -479,6 +479,8 @@ MonoBehaviour:
   _title: {fileID: 3304092348906799363}
   _load_indicator: {fileID: 21300000, guid: 3a0edc21087a9efbcb6c8328533ade0f, type: 3}
   _pin_button: {fileID: 5764229389130850574}
+  _filebrowser: {fileID: 9208456540936095182, guid: 9d49ce930729cd3aeb3e3b4abfed3534,
+    type: 3}
 --- !u!114 &4504394242791987882
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -621,4 +623,15 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 7581091008820731618}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 3996771653726350421}
+        m_MethodName: select_asset
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2

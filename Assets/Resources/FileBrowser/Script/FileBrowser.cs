@@ -20,6 +20,9 @@ public class FileBrowser : MonoBehaviour
 
     public void show(FileBrowserCallback callback, string[] filters=null) {                
         _callback = callback;
+        if (_file == null) {
+            _file = new FileView();
+        }
         _file.set_filters(filters);
     }
 

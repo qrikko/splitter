@@ -28,8 +28,10 @@ public class FileView : MonoBehaviour
     //private List<string> _extensions = new List<string>();
     public void set_filters (string[] filters) {
         _extensions.Clear();
-        foreach(string s in filters) {
-            _extensions.Add(s);
+        if (filters != null) {
+            foreach(string s in filters) {
+                _extensions.Add(s);
+            }
         }
         if (_current_folder != null) {
             list_folder(_current_folder.FullName);

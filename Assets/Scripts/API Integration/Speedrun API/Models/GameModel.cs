@@ -69,8 +69,11 @@ namespace speedrun {
                 System.IO.FileInfo[] files = di.GetFiles();
 
                 foreach(System.IO.FileInfo file in files) {
-                    if (System.IO.File.Exists(System.IO.Path.GetFileNameWithoutExtension(file.Name))) {
+                    if (System.IO.Path.GetFileNameWithoutExtension(file.Name) == type.ToString()) {
                         Debug.LogFormat("File '{0}' not in cache but on disk!", type.ToString());
+                        image_from_cache(file.FullName, type);
+                        callback(_asset_cache[type]);
+                        return;
                     }
                 }
             }
@@ -84,19 +87,8 @@ namespace speedrun {
                 client.DownloadFileAsync(new System.Uri(assets.cover_medium.uri), img_path);
                 client.DownloadFileCompleted += new System.ComponentModel.AsyncCompletedEventHandler(
                     (object sender, System.ComponentModel.AsyncCompletedEventArgs e) => {
-                        byte[] img_data = System.IO.File.ReadAllBytes(img_path);
-                        var foo = System.IO.File.GetAttributes(img_path);
-                        int w = assets.cover_medium.width;
-                        int h = assets.cover_medium.height;
-                        UnityEngine.Texture2D tex = new UnityEngine.Texture2D(
-                            w, h, TextureFormat.RGB24, false
-                        );
-                        tex.LoadImage(img_data);
-                        Rect rect = new Rect(0,0,w,h);
-                        Sprite sprite = Sprite.Create(tex, rect, new Vector2(0.5f,0.0f), 1.0f);
-
-                        _asset_cache[type] = sprite;
-                        callback(sprite);
+                        image_from_cache(img_path, type);
+                        callback(_asset_cache[type]);
                     }
                 );
             }

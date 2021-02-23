@@ -80,7 +80,11 @@ namespace mmlbapi {
 
         public override void get_asset(AssetType type, splitter.ImageAvaliable callback)
         {
-            throw new System.NotImplementedException();
+            string img_path = UnityEngine.Application.persistentDataPath + "/game_cache/" + guid + "/assets/" + type.ToString() + ".png";
+            image_from_cache(img_path, type);
+            if (_asset_cache[type]) {
+               callback(_asset_cache[type]);
+            }
         }
     }
 
