@@ -126,7 +126,7 @@ public class Timer : MonoBehaviour
             _gradient_settings.topRight,
             _gradient_settings.bottomRight,
             _gradient_settings.bottomLeft
-        );
+        ); 
         _text.colorGradient = _initial_gradient;
         _state = TimeState.Stopped;
         _stopwatch.Stop();
