@@ -72,7 +72,7 @@ public class GameView : MonoBehaviour
         if (File.Exists(path)) {
             SceneManager.LoadScene("Timer");
         } else {
-            SceneManager.LoadScene("Timer Settings");
+            SceneManager.LoadScene("Split Settings");
         }        
     }
 
@@ -80,7 +80,7 @@ public class GameView : MonoBehaviour
         PlayerPrefs.SetString("active_game", _model.guid.ToString());
         string path = Application.persistentDataPath + "/game_cache/" + _model.guid + "/splits/" + "split.json";
 
-        SceneManager.LoadScene("Timer Settings");
+        SceneManager.LoadScene("Split Settings");
     }
 
     public void set_game(string guid) {
@@ -121,12 +121,12 @@ public class GameView : MonoBehaviour
             FileStream fs = new FileStream(game_path, FileMode.Open);
             StreamReader sr = new StreamReader(fs);
 
-            splitter.GenericGameModel game_model = JsonConvert.DeserializeObject<mmlbapi.GameModel>(sr.ReadToEnd());            
+//            splitter.GenericGameModel game_model = JsonConvert.DeserializeObject<splitter.GenericGameModel>(sr.ReadToEnd());            
 
             splitter.RunModel model = new splitter.RunModel();
             model.run = new splitter.Run();
             model.run.game_meta.thumb_path = "game_thumb.png";
-            model.run.game_meta.name = game_model.title;
+//            model.run.game_meta.name = game_model.title;
             
             return model;
         }

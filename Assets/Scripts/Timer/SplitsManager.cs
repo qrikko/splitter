@@ -167,7 +167,7 @@ public class SplitsManager : MonoBehaviour {
         on_attempts_update(_model.run.game_meta.attempts_count, _model.run.game_meta.finished_count);
 
         save();
-        on_run_end();
+        on_run_end();   // lavaflow?
     }
 
     private splitter.Split create_split(long split_time) {

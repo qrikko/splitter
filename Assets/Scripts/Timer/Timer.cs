@@ -19,6 +19,7 @@ public class Timer : MonoBehaviour
     }
 
     [SerializeField] private TMP_Text _text = null;
+    [SerializeField] private TMP_ColorGradient _gradient_settings;
 
     private string _initial_text;
 
@@ -56,6 +57,7 @@ public class Timer : MonoBehaviour
             gradient.bottomLeft = new Color(1.0f, 0.44f, 0.43f);
             gradient.bottomRight = gradient.bottomLeft;
         }
+        
         _text.colorGradient = gradient;
     }
 
@@ -81,7 +83,13 @@ public class Timer : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _initial_gradient = _text.colorGradient;
+        _initial_gradient = new VertexGradient(
+            _gradient_settings.topLeft,
+            _gradient_settings.topRight,
+            _gradient_settings.bottomRight,
+            _gradient_settings.bottomLeft
+        );
+        //_initial_gradient = _text.colorGradient;
         //_is_running = true;
         //_stopwatch.Start();
         //_initial_text = _text.text;
@@ -113,6 +121,12 @@ public class Timer : MonoBehaviour
 
     public void reset()
     {
+        _initial_gradient = new VertexGradient(
+            _gradient_settings.topLeft,
+            _gradient_settings.topRight,
+            _gradient_settings.bottomRight,
+            _gradient_settings.bottomLeft
+        );
         _text.colorGradient = _initial_gradient;
         _state = TimeState.Stopped;
         _stopwatch.Stop();
