@@ -654,7 +654,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &186348359
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1367,27 +1367,27 @@ PrefabInstance:
     - target: {fileID: 4476092604183441563, guid: 564aa6448e8e6dca2885d4b166ed1782,
         type: 3}
       propertyPath: m_AnchorMax.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4476092604183441563, guid: 564aa6448e8e6dca2885d4b166ed1782,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4588637813457884949, guid: 564aa6448e8e6dca2885d4b166ed1782,
         type: 3}
       propertyPath: m_AnchorMax.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4588637813457884949, guid: 564aa6448e8e6dca2885d4b166ed1782,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4588637813457884949, guid: 564aa6448e8e6dca2885d4b166ed1782,
         type: 3}
       propertyPath: m_AnchorMin.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6482310179662175706, guid: 564aa6448e8e6dca2885d4b166ed1782,
         type: 3}
@@ -8736,7 +8736,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1522702304}
   m_HandleRect: {fileID: 1522702311}
   m_Direction: 0
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
