@@ -75,11 +75,7 @@ public class SpeedrunAPIGameSplitController : MonoBehaviour {
         {
             yield return request.SendWebRequest();
 
-            if (request.isNetworkError)
-            {
-                Debug.Log("Error: " + request.error);
-            } else
-            {
+            if (request.result == UnityWebRequest.Result.Success) {
                 _categories = JsonConvert.DeserializeObject<speedrun.Categories>(request.downloadHandler.text);
                 List<string> options = new List<string>();
                 foreach (var i in _categories.data)
@@ -87,6 +83,8 @@ public class SpeedrunAPIGameSplitController : MonoBehaviour {
                     options.Add(i.name);
                 }
                 _category.AddOptions(options);
+            } else {
+                Debug.Log("Error: " + request.error);
             }
         }
     }
