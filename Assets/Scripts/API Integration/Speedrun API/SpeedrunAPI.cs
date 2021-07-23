@@ -29,9 +29,7 @@ namespace speedrun {
                 request.SetRequestHeader("Content-Type", "application/json");
                 yield return request.SendWebRequest();
                 
-                if (request.isNetworkError) {
-                    Debug.Log("Error: " + request.error);
-                } else {
+                if (request.result == UnityWebRequest.Result.Success) {
                     //GameSearchModel game_list = JsonUtility.FromJson<GameSearchModel>(request.downloadHandler.text);
                     GameSearchModel game_list = JsonConvert.DeserializeObject<GameSearchModel>(request.downloadHandler.text);
 
@@ -40,6 +38,8 @@ namespace speedrun {
                         //game_view.set_game(data.id);
                         game_view.set_model(data);
                     }
+                } else {
+                    Debug.Log("Error: " + request.error);
                 }
             }
         }
