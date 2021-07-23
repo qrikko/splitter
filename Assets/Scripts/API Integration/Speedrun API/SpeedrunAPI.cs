@@ -120,12 +120,12 @@ namespace speedrun {
             {
                 yield return request.SendWebRequest();
 
-                if (request.isNetworkError) {
-                    Debug.Log("Error: " + request.error);
-                } else {
+                if (request.result == UnityWebRequest.Result.Success) {
                     _game_model_cache[game_id] = JsonConvert.DeserializeObject<speedrun.GameModel>(request.downloadHandler.text);
 
                     callback(_game_model_cache[game_id]);
+                } else {
+                    Debug.Log("Error: " + request.error);
                 }
             }
         }
