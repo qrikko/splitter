@@ -66,9 +66,7 @@ namespace TwitchAPI {
             texture_request.SetRequestHeader("Client-ID", "nm92v8wkvmrhulyqrhfct9vljid72k");
             yield return texture_request.SendWebRequest();
 
-            if (texture_request.isNetworkError || texture_request.isHttpError) {
-                Debug.Log(texture_request.error);
-            } else {
+            if (texture_request.result == UnityWebRequest.Result.Success) {
                 Texture2D texture = ((DownloadHandlerTexture)texture_request.downloadHandler).texture;
                 _twitch_user_image_cache[login] = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(.5f, .5f));
                 callback(_twitch_user_image_cache[login]);
@@ -78,6 +76,8 @@ namespace TwitchAPI {
                 string path = Application.persistentDataPath + "/runners/" + login + "/runner_thumb.png";
                 Directory.CreateDirectory(Path.GetDirectoryName(path));
                 File.WriteAllBytes(path, img);
+            } else {
+                Debug.Log(texture_request.error);
             }
         }
 
