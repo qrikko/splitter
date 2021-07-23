@@ -27,6 +27,7 @@ namespace speedrun {
             string uri = "http://www.speedrun.com/api/v1/games?name=" + UnityWebRequest.EscapeURL(terms);
             using (UnityWebRequest request = UnityWebRequest.Get(uri)) {
                 request.SetRequestHeader("Content-Type", "application/json");
+                request.SetRequestHeader("User-Agent", "splitter/2.2.2, multi-platform speedrun timer! https://github.com/qrikko/splitter");
                 yield return request.SendWebRequest();
                 
                 if (request.result == UnityWebRequest.Result.Success) {
