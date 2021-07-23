@@ -77,15 +77,13 @@ public class Split : MonoBehaviour, ISelectHandler
         UnityWebRequest request = UnityWebRequestTexture.GetTexture(path);
         yield return request.SendWebRequest();
 
-        if (request.isNetworkError || request.isHttpError)
-        {
-            Debug.Log(request.error);
-        } else
-        {
+        if (request.result == UnityWebRequest.Result.Success) {
             Texture2D texture = ((DownloadHandlerTexture)request.downloadHandler).texture;
             Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(.5f, .5f));
             _thumb.sprite = sprite;
             _thumb.preserveAspect = true;
+        } else {
+            Debug.Log(request.error);
         }
     }
 
