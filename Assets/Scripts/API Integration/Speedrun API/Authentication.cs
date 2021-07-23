@@ -25,16 +25,14 @@ namespace speedrun
                 request.SetRequestHeader("X-API-Key", key);
                 yield return request.SendWebRequest(); 
 
-                if (request.isNetworkError)
-                {
-                    Debug.Log("Error: " + request.error);
-                } else
-                {
+                if (request.result == UnityWebRequest.Result.Success) {
                     Debug.Log("\nRecieved: " + request.downloadHandler.text);
                     AuthenticationModel user = JsonUtility.FromJson<AuthenticationModel>(request.downloadHandler.text);
                     PlayerPrefs.SetString("userid", user.data.id);
                     PlayerPrefs.SetString("username", user.data.names.international);
                     SceneManager.LoadScene("Dashboard", LoadSceneMode.Single);
+                } else {
+                    Debug.Log("Error: " + request.error);
                 }
             }                
         }
