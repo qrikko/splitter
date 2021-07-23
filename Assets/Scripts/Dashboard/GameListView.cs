@@ -113,9 +113,7 @@ namespace splitter {
             using (UnityWebRequest request = UnityWebRequest.Get(uri)) {
                 yield return request.SendWebRequest();
 
-                if (request.isNetworkError) {
-                    Debug.Log("Error: " + request.error);
-                } else {
+                if (request.result == UnityWebRequest.Result.Success) {
                     // expects speedrun.GameListModel, which is removed to make it api agnostic!
                     //GameListModel game_list = JsonUtility.FromJson<GameListModel>(request.downloadHandler.text);
 
@@ -125,6 +123,8 @@ namespace splitter {
 //                        GameView game_view = Instantiate(_game_list_content.game_view_prefab, _game_list_content.transform);
 //                        game_view.set_game(game.run.game);
 //                    }
+                } else {
+                    Debug.Log("Error: " + request.error);
                 }
             }
         }
