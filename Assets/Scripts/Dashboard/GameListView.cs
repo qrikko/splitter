@@ -44,16 +44,15 @@ namespace splitter {
             {
                 yield return request.SendWebRequest();
 
-                if (request.isNetworkError) {
-                    Debug.Log("Error: " + request.error);
-                } else {
+                if (request.result == UnityWebRequest.Result.Success) {
                     // expects speedrun.GameModel, but should be api agnostic here
                     //GameModel game_list = JsonUtility.FromJson<GameModel>(request.downloadHandler.text);
 
                     // Loop through user.data, and for each create a new row from a prefab
                         GameView game_view = Instantiate(_game_list_content.game_view_prefab, _game_list_content.transform);
                     //    game_view.set_game(game_list.data.id);
-                    
+                } else {
+                    Debug.Log("Error: " + request.error);                    
                 }
             }
         }
