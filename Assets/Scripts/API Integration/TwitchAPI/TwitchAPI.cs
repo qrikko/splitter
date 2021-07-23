@@ -88,12 +88,12 @@ namespace TwitchAPI {
 
             yield return request.SendWebRequest();
 
-            if (request.isNetworkError) {
-                Debug.Log("Error: " + request.error);
-            } else {
+            if (request.result == UnityWebRequest.Result.Success) {
                 _twitch_user_cache[login] = JsonConvert.DeserializeObject<TwitchUserModel>(request.downloadHandler.text).data[0];
 
                 callback(_twitch_user_cache[login]);
+            } else {
+                Debug.Log("Error: " + request.error);
             }
         }
 
