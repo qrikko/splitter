@@ -37,9 +37,7 @@ namespace mmlbapi {
                 request.SetRequestHeader("Content-Type", "application/json");
                 yield return request.SendWebRequest();
 
-                if (request.isNetworkError) {
-                    Debug.Log("Error: " + request.error);
-                } else {
+                if (request.result == UnityWebRequest.Result.Success) {
                     _games.games_list = JsonUtility.FromJson<GamesListModel>(request.downloadHandler.text);
                     _games.update_date = System.DateTime.Now;
 
@@ -54,6 +52,8 @@ namespace mmlbapi {
                     
                     fs.Flush();
                     fs.Close();
+                } else {
+                    Debug.Log("Error: " + request.error);
                 }
             }
         }
