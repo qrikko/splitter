@@ -26,15 +26,15 @@ public class GameListManager : MonoBehaviour
         UnityWebRequest request = UnityWebRequest.Get(url);
         yield return request.SendWebRequest();
 
-        if (request.isNetworkError) {
-            Debug.Log("Error: " + request.error);
-        } else {
+        if (request.result == UnityWebRequest.Result.Success) {
             speedrun.PlatformMeta platforms = JsonConvert.DeserializeObject<speedrun.PlatformMeta>(request.downloadHandler.text);
             //_platform_cache = new speedrun.PlatformCache();
 
             foreach(speedrun.PlatformData p in platforms.data) {
                 _platform_cache.platforms[p.id] = new speedrun.Platform(p.name, p.released);
             }
+        } else {
+            Debug.Log("Error: " + request.error);
         }
     }
 }
