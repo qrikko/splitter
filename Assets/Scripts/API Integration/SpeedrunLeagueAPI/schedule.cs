@@ -28,12 +28,11 @@ namespace SpeedrunningLeagueAPI {
             using (UnityWebRequest request = UnityWebRequest.Get(uri)) {
                 yield return request.SendWebRequest();
 
-                if (request.isNetworkError)
-                {
-                    Debug.Log("Error: " + request.error);
-                } else {
+                if (request.result == UnityWebRequest.Result.Success) {
                     Debug.Log("\nRecieved: " + request.downloadHandler.text);
                     model = JsonConvert.DeserializeObject<MatchesModel>(request.downloadHandler.text);
+                } else {
+                    Debug.Log("Error: " + request.error);
                 }
             }
         }
